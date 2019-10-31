@@ -1,0 +1,7 @@
+namespace NServiceBus.Extensions.DependencyInjection
+{
+    public class static ServiceCollectionExtensions
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddNServiceBus(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, NServiceBus.EndpointConfiguration configuration) { }
+    }
+}
