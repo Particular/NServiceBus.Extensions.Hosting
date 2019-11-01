@@ -5,12 +5,12 @@
     using NServiceBus;
 
     /// <summary>
-    /// Extensions methods to configure an IServiceCollection for NServiceBus. 
+    /// Extensions methods to configure an IServiceCollection for NServiceBus.
     /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds NServiceBus, IMessageSession, and related services to the IServiceCollection. 
+        /// Adds NServiceBus, IMessageSession, and related services to the IServiceCollection.
         /// </summary>
         public static IServiceCollection AddNServiceBus(this IServiceCollection services, EndpointConfiguration configuration)
         {
