@@ -6,9 +6,9 @@
     using Microsoft.Extensions.Hosting;
     using NServiceBus;
 
-    class NServiceBusService : IHostedService
+    class NServiceBusHostedService : IHostedService
     {
-        public NServiceBusService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider)
+        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider)
         {
             this.startableEndpoint = startableEndpoint;
             this.serviceProvider = serviceProvider;
