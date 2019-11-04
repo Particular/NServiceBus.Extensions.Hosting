@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>Easy integration with Microsoft.Extensions.DependencyInjection for NServiceBus</Description>
+    <Description>Easy integration with Microsoft.Extensions.Hosting for NServiceBus</Description>
   </PropertyGroup>
 
   <ItemGroup>

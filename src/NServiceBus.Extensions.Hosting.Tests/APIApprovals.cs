@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Extensions.DependencyInjection.Tests
+﻿namespace NServiceBus.Extensions.Hosting.Tests
 {
     using NUnit.Framework;
     using Particular.Approvals;
