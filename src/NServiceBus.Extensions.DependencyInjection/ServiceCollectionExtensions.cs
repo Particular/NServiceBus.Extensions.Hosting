@@ -1,8 +1,8 @@
-﻿namespace NServiceBus.Extensions.DependencyInjection
+﻿namespace NServiceBus
 {
+    using Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using NServiceBus;
 
     /// <summary>
     /// Extensions methods to configure an IServiceCollection for NServiceBus.
