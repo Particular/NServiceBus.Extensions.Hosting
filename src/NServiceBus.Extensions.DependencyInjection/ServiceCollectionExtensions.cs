@@ -5,7 +5,7 @@
     using Microsoft.Extensions.Hosting;
 
     /// <summary>
-    /// Extensions methods to configure an IServiceCollection for NServiceBus.
+    /// Extension methods to configure an IServiceCollection for NServiceBus.
     /// </summary>
     public static class ServiceCollectionExtensions
     {
