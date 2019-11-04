@@ -1,6 +1,6 @@
 ﻿namespace NServiceBus
 {
-    using Extensions.DependencyInjection;
+    using Extensions.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 

@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Extensions.DependencyInjection
+﻿namespace NServiceBus.Extensions.Hosting
 {
     using System;
     using System.Collections.Generic;

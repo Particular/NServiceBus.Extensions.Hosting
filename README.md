@@ -1,2 +1,2 @@
-# NServiceBus.Extensions.DependencyInjection
-Microsoft Dependency Injection extension for .NET Core to register NServiceBus
+# NServiceBus.Extensions.Hosting
+NServiceBus extension to support Microsoft.Extensions.Hosting
