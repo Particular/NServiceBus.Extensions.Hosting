@@ -1,5 +1,7 @@
 ﻿namespace NServiceBus.WebHost
 {
+    using System;
+    using System.Threading;
     using Extensions.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -19,9 +21,28 @@
         public static IServiceCollection AddNServiceBus(this IServiceCollection services, EndpointConfiguration configuration)
         {
             var startableEndpoint = EndpointWithExternallyManagedContainer.Create(configuration, new ServiceCollectionAdapter(services));
+            var hostedService = new NServiceBusHostedService(startableEndpoint);
 
-            services.AddSingleton(_ => startableEndpoint.MessageSession.Value);
-            services.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(startableEndpoint, serviceProvider));
+            services.AddSingleton<IHostedService>(serviceProvider =>
+            {
+                hostedService.UseServiceProvider(serviceProvider);
+                return hostedService;
+            });
+            services.AddSingleton<IMessageSession>(_ =>
+            {
+                if (hostedService.Endpoint != null)
+                {
+                    return hostedService.Endpoint;
+                }
+
+                var timeout = TimeSpan.FromSeconds(30);
+                if (SpinWait.SpinUntil(() => hostedService.Endpoint != null, timeout))
+                {
+                    return hostedService.Endpoint;
+                }
+
+                throw new TimeoutException($"Unable to resolve the message session within '{timeout:g}'. Verify that the endpoint was able to start.");
+            });
 
             return services;
         }

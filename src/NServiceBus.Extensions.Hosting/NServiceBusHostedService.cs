@@ -4,29 +4,33 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
-    using NServiceBus;
 
     class NServiceBusHostedService : IHostedService
     {
-        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider)
+        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint)
         {
             this.startableEndpoint = startableEndpoint;
-            this.serviceProvider = serviceProvider;
         }
+
+        public IEndpointInstance Endpoint { get; private set; }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
+            Endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
                 .ConfigureAwait(false);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return endpoint.Stop();
+            return Endpoint.Stop();
         }
 
-        IEndpointInstance endpoint;
+        public void UseServiceProvider(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
+        }
+
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
-        readonly IServiceProvider serviceProvider;
+        IServiceProvider serviceProvider;
     }
 }
