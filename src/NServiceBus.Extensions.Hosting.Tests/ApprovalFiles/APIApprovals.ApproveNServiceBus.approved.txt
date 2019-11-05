@@ -1,5 +1,9 @@
 namespace NServiceBus
 {
+    public class static HostBuilderExtensions
+    {
+        public static Microsoft.Extensions.Hosting.IHostBuilder UseNServiceBus(this Microsoft.Extensions.Hosting.IHostBuilder hostBuilder, System.Func<Microsoft.Extensions.Hosting.HostBuilderContext, NServiceBus.EndpointConfiguration> endpointConfigurationBuilder) { }
+    }
     public class static ServiceCollectionExtensions
     {
         public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddNServiceBus(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, NServiceBus.EndpointConfiguration configuration) { }
