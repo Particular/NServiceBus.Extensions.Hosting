@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Extensions.Hosting
+﻿namespace NServiceBus
 {
     using System;
     using Microsoft.Extensions.Hosting;
