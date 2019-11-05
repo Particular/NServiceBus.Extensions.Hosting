@@ -1,4 +1,4 @@
-﻿namespace NServiceBus
+﻿namespace NServiceBus.WebHost
 {
     using Extensions.Hosting;
     using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,10 @@
         /// <summary>
         /// Adds NServiceBus, IMessageSession, and related services to the IServiceCollection.
         /// </summary>
+        /// <remarks>
+        /// Use this extension method with WebHost only.
+        /// For GenericHost or ASP.NET Core version 3 or above use <see cref="HostBuilderExtensions.UseNServiceBus"/>
+        /// </remarks>
         public static IServiceCollection AddNServiceBus(this IServiceCollection services, EndpointConfiguration configuration)
         {
             var startableEndpoint = EndpointWithExternallyManagedContainer.Create(configuration, new ServiceCollectionAdapter(services));

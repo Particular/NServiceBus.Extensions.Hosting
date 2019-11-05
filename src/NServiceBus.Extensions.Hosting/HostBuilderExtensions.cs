@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.Extensions.Hosting;
+    using WebHost;
 
     /// <summary>
     /// Extension methods to configure NServiceBus for the .NET Core generic host.
