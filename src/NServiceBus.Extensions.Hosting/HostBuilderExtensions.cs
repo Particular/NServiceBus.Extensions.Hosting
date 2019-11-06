@@ -1,8 +1,9 @@
 ﻿namespace NServiceBus
 {
     using System;
+    using Extensions.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using WebHost;
 
     /// <summary>
     /// Extension methods to configure NServiceBus for the .NET Core generic host.
@@ -17,7 +18,17 @@
             hostBuilder.ConfigureServices((ctx, serviceCollection) =>
             {
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
-                serviceCollection.AddNServiceBus(endpointConfiguration);
+                var startableEndpoint = EndpointWithExternallyManagedContainer.Create(
+                    endpointConfiguration, 
+                    new ServiceCollectionAdapter(serviceCollection));
+
+                serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
+                serviceCollection.AddSingleton<IHostedService>(serviceProvider =>
+                {
+                    var hostedService = new NServiceBusHostedService(startableEndpoint);
+                    hostedService.Configure(serviceProvider);
+                    return hostedService;
+                });
             });
 
             return hostBuilder;
