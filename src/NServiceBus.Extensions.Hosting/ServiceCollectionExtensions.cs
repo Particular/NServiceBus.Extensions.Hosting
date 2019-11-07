@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.WebHost
+﻿namespace NServiceBus
 {
     using Extensions.Hosting;
     using Microsoft.Extensions.DependencyInjection;
@@ -14,14 +14,18 @@
         /// </summary>
         /// <remarks>
         /// Use this extension method with WebHost only.
-        /// For GenericHost or ASP.NET Core version 3 or above use <see cref="HostBuilderExtensions.UseNServiceBus"/>
         /// </remarks>
         public static IServiceCollection AddNServiceBus(this IServiceCollection services, EndpointConfiguration configuration)
         {
             var startableEndpoint = EndpointWithExternallyManagedContainer.Create(configuration, new ServiceCollectionAdapter(services));
+            var hostedService = new NServiceBusHostedService(startableEndpoint);
 
-            services.AddSingleton(_ => startableEndpoint.MessageSession.Value);
-            services.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(startableEndpoint, serviceProvider));
+            services.AddSingleton<IMessageSession>(_ => new WebHostCompatibleMessageSession(hostedService));
+            services.AddSingleton<IHostedService>(serviceProvider =>
+            {
+                hostedService.UseServiceProvider(serviceProvider);
+                return hostedService;
+            });
 
             return services;
         }

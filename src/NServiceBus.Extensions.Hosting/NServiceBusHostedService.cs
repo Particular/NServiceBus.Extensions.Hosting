@@ -4,29 +4,44 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
-    using NServiceBus;
 
     class NServiceBusHostedService : IHostedService
     {
-        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider)
+        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint)
         {
             this.startableEndpoint = startableEndpoint;
-            this.serviceProvider = serviceProvider;
         }
+
+        public Task<IEndpointInstance> Endpoint => endpointTcs.Task;
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
-                .ConfigureAwait(false);
+            try
+            {
+                var endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
+                    .ConfigureAwait(false);
+                endpointTcs.SetResult(endpoint);
+            }
+            catch (Exception e)
+            {
+                endpointTcs.SetException(e);
+                throw;
+            }
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            return endpoint.Stop();
+            var endpoint = await endpointTcs.Task.ConfigureAwait(false);
+            await endpoint.Stop().ConfigureAwait(false);
         }
 
-        IEndpointInstance endpoint;
+        public void UseServiceProvider(IServiceProvider serviceProvider)
+        {
+            this.serviceProvider = serviceProvider;
+        }
+
+        readonly TaskCompletionSource<IEndpointInstance> endpointTcs = new TaskCompletionSource<IEndpointInstance>();
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
-        readonly IServiceProvider serviceProvider;
+        IServiceProvider serviceProvider;
     }
 }
