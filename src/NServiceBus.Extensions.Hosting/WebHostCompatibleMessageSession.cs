@@ -5,7 +5,7 @@
 
     class WebHostCompatibleMessageSession : IMessageSession
     {
-        NServiceBusHostedService hostedService;
+        readonly NServiceBusHostedService hostedService;
 
         public WebHostCompatibleMessageSession(NServiceBusHostedService hostedService)
         {
@@ -14,38 +14,38 @@
 
         public async Task Send(object message, SendOptions options)
         {
-            var session = await hostedService.Endpoint.ConfigureAwait(true);
-            await session.Send(message, options).ConfigureAwait(true);
+            var session = await hostedService.Endpoint.ConfigureAwait(false);
+            await session.Send(message, options).ConfigureAwait(false);
         }
 
         public async Task Send<T>(Action<T> messageConstructor, SendOptions options)
         {
-            var session = await hostedService.Endpoint.ConfigureAwait(true);
-            await session.Send(messageConstructor, options).ConfigureAwait(true);
+            var session = await hostedService.Endpoint.ConfigureAwait(false);
+            await session.Send(messageConstructor, options).ConfigureAwait(false);
         }
 
         public async Task Publish(object message, PublishOptions options)
         {
-            var session = await hostedService.Endpoint.ConfigureAwait(true);
-            await session.Publish(message, options).ConfigureAwait(true);
+            var session = await hostedService.Endpoint.ConfigureAwait(false);
+            await session.Publish(message, options).ConfigureAwait(false);
         }
 
         public async Task Publish<T>(Action<T> messageConstructor, PublishOptions publishOptions)
         {
-            var session = await hostedService.Endpoint.ConfigureAwait(true);
-            await session.Publish(messageConstructor, publishOptions).ConfigureAwait(true);
+            var session = await hostedService.Endpoint.ConfigureAwait(false);
+            await session.Publish(messageConstructor, publishOptions).ConfigureAwait(false);
         }
 
         public async Task Subscribe(Type eventType, SubscribeOptions options)
         {
-            var session = await hostedService.Endpoint.ConfigureAwait(true);
-            await session.Subscribe(eventType, options).ConfigureAwait(true);
+            var session = await hostedService.Endpoint.ConfigureAwait(false);
+            await session.Subscribe(eventType, options).ConfigureAwait(false);
         }
 
         public async Task Unsubscribe(Type eventType, UnsubscribeOptions options)
         {
-            var session = await hostedService.Endpoint.ConfigureAwait(true);
-            await session.Unsubscribe(eventType, options).ConfigureAwait(true);
+            var session = await hostedService.Endpoint.ConfigureAwait(false);
+            await session.Unsubscribe(eventType, options).ConfigureAwait(false);
         }
     }
 }
