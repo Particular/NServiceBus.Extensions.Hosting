@@ -40,7 +40,7 @@
             this.serviceProvider = serviceProvider;
         }
 
-        readonly TaskCompletionSource<IEndpointInstance> endpointTcs = new TaskCompletionSource<IEndpointInstance>();
+        readonly TaskCompletionSource<IEndpointInstance> endpointTcs = new TaskCompletionSource<IEndpointInstance>(TaskCreationOptions.RunContinuationsAsynchronously);
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
         IServiceProvider serviceProvider;
     }
