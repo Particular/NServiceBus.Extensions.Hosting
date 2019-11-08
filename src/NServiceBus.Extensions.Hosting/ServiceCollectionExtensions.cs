@@ -19,8 +19,9 @@
         {
             var startableEndpoint = EndpointWithExternallyManagedContainer.Create(configuration, new ServiceCollectionAdapter(services));
             var hostedService = new NServiceBusHostedService(startableEndpoint);
-
-            services.AddSingleton<IMessageSession>(_ => new WebHostCompatibleMessageSession(hostedService));
+            var webHostCompatibleMessageSession = new WebHostCompatibleMessageSession(hostedService);
+            
+            services.AddSingleton<IMessageSession>(webHostCompatibleMessageSession);
             services.AddSingleton<IHostedService>(serviceProvider =>
             {
                 hostedService.UseServiceProvider(serviceProvider);
