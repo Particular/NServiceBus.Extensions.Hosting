@@ -16,23 +16,31 @@
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            try
+            // closure allocation is ok here
+            using (cancellationToken.Register(() => { endpointTcs.TrySetCanceled(); }, useSynchronizationContext: false))
             {
-                var endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
-                    .ConfigureAwait(false);
-                endpointTcs.SetResult(endpoint);
-            }
-            catch (Exception e)
-            {
-                endpointTcs.SetException(e);
-                throw;
+                try
+                {
+                    var endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
+                        .ConfigureAwait(false);
+                    endpointTcs.TrySetResult(endpoint);
+                }
+                catch (Exception e)
+                {
+                    endpointTcs.TrySetException(e);
+                    throw;
+                }
             }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            var endpoint = await endpointTcs.Task.ConfigureAwait(false);
-            await endpoint.Stop().ConfigureAwait(false);
+            // closure allocation is ok here
+            using (cancellationToken.Register(() => { endpointTcs.TrySetCanceled(); }, useSynchronizationContext: false))
+            {
+                var endpoint = await endpointTcs.Task.ConfigureAwait(false);
+                await endpoint.Stop().ConfigureAwait(false);
+            }
         }
 
         public void UseServiceProvider(IServiceProvider serviceProvider)
