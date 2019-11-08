@@ -39,7 +39,13 @@
             using (cancellationToken.Register(() => { endpointTcs.TrySetCanceled(); }, useSynchronizationContext: false))
             {
                 var endpoint = await endpointTcs.Task.ConfigureAwait(false);
-                await endpoint.Stop().ConfigureAwait(false);
+                
+                var stopCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+                using (cancellationToken.Register(() => { stopCompletionSource.TrySetCanceled(); }, useSynchronizationContext: false))
+                {
+                    var resultTask = await Task.WhenAny(endpoint.Stop(), stopCompletionSource.Task).ConfigureAwait(false);
+                    await resultTask.ConfigureAwait(false); // will either immediately complete or throw
+                }
             }
         }
 
