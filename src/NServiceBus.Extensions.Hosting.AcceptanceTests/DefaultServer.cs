@@ -5,6 +5,7 @@
     using AcceptanceTesting.Support;
     using Autofac.Extensions.DependencyInjection;
     using Extensions.Hosting;
+    using Lamar;
 
     public class DefaultServer : ExternallyManagedContainerServer
     {
@@ -12,7 +13,9 @@
         {
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
-                endpointConfiguration.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+//                endpointConfiguration.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+                endpointConfiguration.UseServiceProviderFactory<ServiceRegistry>(new LamarServiceProviderFactory());
+
                 configurationBuilderCustomization(endpointConfiguration);
             });
         }
