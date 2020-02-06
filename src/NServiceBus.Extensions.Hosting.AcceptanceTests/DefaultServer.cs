@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using AcceptanceTesting.Support;
     using Autofac.Extensions.DependencyInjection;
+    using Castle.Windsor.MsDependencyInjection;
     using Extensions.Hosting;
     using Lamar;
 
@@ -14,7 +15,8 @@
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
 //                endpointConfiguration.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-                endpointConfiguration.UseServiceProviderFactory<ServiceRegistry>(new LamarServiceProviderFactory());
+//                endpointConfiguration.UseServiceProviderFactory<ServiceRegistry>(new LamarServiceProviderFactory());
+                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
 
                 configurationBuilderCustomization(endpointConfiguration);
             });
