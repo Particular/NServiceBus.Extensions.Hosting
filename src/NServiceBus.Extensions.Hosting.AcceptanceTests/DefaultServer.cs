@@ -7,6 +7,8 @@
     using Castle.Windsor.MsDependencyInjection;
     using Extensions.Hosting;
     using Lamar;
+    using Unity;
+    using Unity.Microsoft.DependencyInjection;
 
     public class DefaultServer : ExternallyManagedContainerServer
     {
@@ -16,7 +18,8 @@
             {
 //                endpointConfiguration.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 //                endpointConfiguration.UseServiceProviderFactory<ServiceRegistry>(new LamarServiceProviderFactory());
-                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
+//                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
+                endpointConfiguration.UseServiceProviderFactory<IUnityContainer>(new ServiceProviderFactory(null));
 
                 configurationBuilderCustomization(endpointConfiguration);
             });
