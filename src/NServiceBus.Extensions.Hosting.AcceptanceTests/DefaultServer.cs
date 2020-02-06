@@ -7,6 +7,7 @@
     using Castle.Windsor.MsDependencyInjection;
     using Extensions.Hosting;
     using Lamar;
+    using StructureMap;
     using Unity;
     using Unity.Microsoft.DependencyInjection;
 
@@ -19,7 +20,8 @@
 //                endpointConfiguration.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 //                endpointConfiguration.UseServiceProviderFactory<ServiceRegistry>(new LamarServiceProviderFactory());
 //                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
-                endpointConfiguration.UseServiceProviderFactory<IUnityContainer>(new ServiceProviderFactory(null));
+//                endpointConfiguration.UseServiceProviderFactory<IUnityContainer>(new ServiceProviderFactory(null));
+                endpointConfiguration.UseServiceProviderFactory(new StructureMapServiceProviderFactory(new Registry()));
 
                 configurationBuilderCustomization(endpointConfiguration);
             });
