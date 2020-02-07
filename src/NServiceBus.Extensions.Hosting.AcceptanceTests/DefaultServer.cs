@@ -1,12 +1,15 @@
 ﻿namespace NServiceBus.AcceptanceTests.EndpointTemplates
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using AcceptanceTesting.Support;
+    using Autofac;
     using Autofac.Extensions.DependencyInjection;
     using Castle.Windsor.MsDependencyInjection;
     using Extensions.Hosting;
     using Lamar;
+    using Microsoft.Extensions.DependencyInjection;
     using StructureMap;
     using Unity;
     using Unity.Microsoft.DependencyInjection;
@@ -17,14 +20,39 @@
         {
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
-//                endpointConfiguration.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-//                endpointConfiguration.UseServiceProviderFactory<ServiceRegistry>(new LamarServiceProviderFactory());
-//                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
-//                endpointConfiguration.UseServiceProviderFactory<IUnityContainer>(new ServiceProviderFactory(null));
-                endpointConfiguration.UseServiceProviderFactory(new StructureMapServiceProviderFactory(new Registry()));
+                endpointConfiguration.UseContainer(new AutofacServiceProviderFactory(c =>
+                {
+                    var types = endpointCustomizationConfiguration.GetTypesScopedByTestClass();
+                    foreach (var type in types)
+                    {
+                        if (IsMessageHandler(type))
+                        {
+                            c.RegisterType(type).AsImplementedInterfaces().AsSelf().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
+                        }
+                    }
+                }));
+//                endpointConfiguration.UseContainer<ServiceRegistry>(new LamarServiceProviderFactory());
+                //                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
+                //                endpointConfiguration.UseServiceProviderFactory<IUnityContainer>(new ServiceProviderFactory(null));
+                //                endpointConfiguration.UseContainer(new StructureMapServiceProviderFactory(new Registry()));
+                //endpointConfiguration.UseContainer(new DefaultServiceProviderFactory());
 
                 configurationBuilderCustomization(endpointConfiguration);
             });
+        }
+
+        static Type IHandleMessagesType = typeof(IHandleMessages<>);
+        public static bool IsMessageHandler(Type type)
+        {
+            if (type.IsAbstract || type.IsGenericTypeDefinition)
+            {
+                return false;
+            }
+
+            return type.GetInterfaces()
+                .Where(@interface => @interface.IsGenericType)
+                .Select(@interface => @interface.GetGenericTypeDefinition())
+                .Any(genericTypeDef => genericTypeDef == IHandleMessagesType);
         }
     }
 }
