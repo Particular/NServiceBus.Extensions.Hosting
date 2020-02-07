@@ -30,4 +30,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup Label="Ignore the tests with property injection until core is updated with PR https://github.com/Particular/NServiceBus/pull/5578">
+    <Compile Remove="\**\DataBus\**\When_using_custom_IDataBus.cs" />
+    <Compile Remove="\**\Sagas\**\When_sagas_cant_be_found.cs" />
+  </ItemGroup>
+
 </Project>
