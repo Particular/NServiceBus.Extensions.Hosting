@@ -9,13 +9,18 @@
 
     class ContainerAdapter<TContainerBuilder> : IContainer
     {
-        public ContainerAdapter(IServiceProviderFactory<TContainerBuilder> serviceProviderFactory)
+        public ContainerAdapter(IServiceProviderFactory<TContainerBuilder> serviceProviderFactory, ContainerSettings<TContainerBuilder> containerSettings)
         {
-            serviceCollectionAdapter = new ServiceCollectionAdapter(collection);
+            this.containerSettings = containerSettings;
+            serviceCollectionAdapter = new ServiceCollectionAdapter(containerSettings.ServiceCollection);
             serviceProviderAdapter = new Lazy<ServiceProviderAdapter>(() =>
             {
                 locked = true;
-                var containerBuilder = serviceProviderFactory.CreateBuilder(collection);
+                var containerBuilder = serviceProviderFactory.CreateBuilder(containerSettings.ServiceCollection);
+                foreach (var customConfiguration in containerSettings.ContainerConfigurations)
+                {
+                    customConfiguration(containerBuilder);
+                }
                 var serviceProvider = serviceProviderFactory.CreateServiceProvider(containerBuilder);
                 return new ServiceProviderAdapter(serviceProvider);
             }, LazyThreadSafetyMode.ExecutionAndPublication);
@@ -80,8 +85,8 @@
             }
         }
 
+        readonly ContainerSettings<TContainerBuilder> containerSettings;
         readonly ServiceCollectionAdapter serviceCollectionAdapter;
-        readonly ServiceCollection collection = new ServiceCollection();
         readonly Lazy<ServiceProviderAdapter> serviceProviderAdapter;
 
         bool locked;

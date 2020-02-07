@@ -15,11 +15,13 @@
         /// </summary>
         /// <param name="configuration">The endpoint configuration.</param>
         /// <param name="serviceProviderFactory">The <see cref="IServiceProviderFactory{TContainerBuilder}"/> of the container to be used.</param>
-        public static void UseContainer<TContainerBuilder>(this EndpointConfiguration configuration, 
+        public static ContainerSettings<TContainerBuilder> UseContainer<TContainerBuilder>(this EndpointConfiguration configuration, 
             IServiceProviderFactory<TContainerBuilder> serviceProviderFactory)
         {
-            IContainer containerAdapter = new ContainerAdapter<TContainerBuilder>(serviceProviderFactory);
+            var containerSettings = new ContainerSettings<TContainerBuilder>();
+            IContainer containerAdapter = new ContainerAdapter<TContainerBuilder>(serviceProviderFactory, containerSettings);
             configuration.UseContainer(containerAdapter);
+            return containerSettings;
         }
     }
 }
