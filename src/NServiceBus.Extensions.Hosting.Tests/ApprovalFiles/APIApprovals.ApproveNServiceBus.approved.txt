@@ -1,3 +1,10 @@
+namespace NServiceBus.Extensions.Hosting
+{
+    public class static ContainerExtensions
+    {
+        public static void UseContainer<TContainerBuilder>(this NServiceBus.EndpointConfiguration configuration, Microsoft.Extensions.DependencyInjection.IServiceProviderFactory<TContainerBuilder> serviceProviderFactory) { }
+    }
+}
 namespace NServiceBus
 {
     public class static HostBuilderExtensions
