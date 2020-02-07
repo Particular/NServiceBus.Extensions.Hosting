@@ -2,7 +2,13 @@ namespace NServiceBus.Extensions.Hosting
 {
     public class static ContainerExtensions
     {
-        public static void UseContainer<TContainerBuilder>(this NServiceBus.EndpointConfiguration configuration, Microsoft.Extensions.DependencyInjection.IServiceProviderFactory<TContainerBuilder> serviceProviderFactory) { }
+        public static NServiceBus.Extensions.Hosting.ContainerSettings<TContainerBuilder> UseContainer<TContainerBuilder>(this NServiceBus.EndpointConfiguration configuration, Microsoft.Extensions.DependencyInjection.IServiceProviderFactory<TContainerBuilder> serviceProviderFactory) { }
+    }
+    public class ContainerSettings<TContainerBuilder>
+    {
+        public ContainerSettings() { }
+        public Microsoft.Extensions.DependencyInjection.IServiceCollection ServiceCollection { get; }
+        public void ConfigureContainer(System.Action<TContainerBuilder> containerConfiguration) { }
     }
 }
 namespace NServiceBus
