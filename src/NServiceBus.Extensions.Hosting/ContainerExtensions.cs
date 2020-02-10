@@ -1,5 +1,6 @@
-﻿namespace NServiceBus.Extensions.Hosting
+﻿namespace NServiceBus
 {
+    using Extensions.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using ObjectBuilder.Common;
 
