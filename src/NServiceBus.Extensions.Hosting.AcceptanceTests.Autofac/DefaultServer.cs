@@ -14,8 +14,7 @@
         {
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
-                var settings = endpointConfiguration.UseContainer(new AutofacServiceProviderFactory());
-                settings.ConfigureContainer(c => c.RegisterModule<AutofacPropertyInjectionModule>());
+                endpointConfiguration.UseContainer(new AutofacServiceProviderFactory(c => c.RegisterModule<AutofacPropertyInjectionModule>()));
 
                 configurationBuilderCustomization(endpointConfiguration);
             });
