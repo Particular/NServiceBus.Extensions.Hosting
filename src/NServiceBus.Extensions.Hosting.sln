@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Extensions.Host
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Extensions.Hosting.CastleWindsor.AcceptanceTests", "NServiceBus.Extensions.Hosting.CastleWindsor.AcceptanceTests\NServiceBus.Extensions.Hosting.CastleWindsor.AcceptanceTests.csproj", "{DE74932F-FF83-4B3B-8CE7-5FD317A88C57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Extensions.Hosting.Unity.AcceptanceTests", "NServiceBus.Extensions.Hosting.Unity.AcceptanceTests\NServiceBus.Extensions.Hosting.Unity.AcceptanceTests.csproj", "{FF832582-FD62-4F6B-9692-A268E71132F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{DE74932F-FF83-4B3B-8CE7-5FD317A88C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE74932F-FF83-4B3B-8CE7-5FD317A88C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE74932F-FF83-4B3B-8CE7-5FD317A88C57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF832582-FD62-4F6B-9692-A268E71132F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF832582-FD62-4F6B-9692-A268E71132F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF832582-FD62-4F6B-9692-A268E71132F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF832582-FD62-4F6B-9692-A268E71132F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

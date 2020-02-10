@@ -4,13 +4,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AcceptanceTesting.Support;
-    using Castle.Windsor.MsDependencyInjection;
-    using Extensions.Hosting;
-    using Lamar;
-    using Microsoft.Extensions.DependencyInjection;
-    using StructureMap;
-    using Unity;
-    using Unity.Microsoft.DependencyInjection;
 
     public class DefaultServer : ExternallyManagedContainerServer
     {
@@ -19,8 +12,6 @@
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
 //                endpointConfiguration.UseContainer<ServiceRegistry>(new LamarServiceProviderFactory());
-                //                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
-                //                endpointConfiguration.UseServiceProviderFactory<IUnityContainer>(new ServiceProviderFactory(null));
                 //                endpointConfiguration.UseContainer(new StructureMapServiceProviderFactory(new Registry()));
                 //endpointConfiguration.UseContainer(new DefaultServiceProviderFactory());
 
