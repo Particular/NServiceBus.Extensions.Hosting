@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
     using AcceptanceTesting.Support;
+    using Lamar;
+    using MessageInterfaces.MessageMapper.Reflection;
 
     public class DefaultServer : ExternallyManagedContainerServer
     {
@@ -10,6 +12,13 @@
         {
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
+                var containerSettings = endpointConfiguration.UseContainer<ServiceRegistry>(new LamarServiceProviderFactory());
+                containerSettings.ConfigureContainer(registry =>
+                {
+                    registry.Policies.SetAllProperties(setterConvention => setterConvention.WithAnyTypeFromNamespace("NServiceBus.AcceptanceTests"));
+                    registry.Policies.FillAllPropertiesOfType<IMessageCreator>().Use<MessageMapper>();
+                });
+
                 configurationBuilderCustomization(endpointConfiguration);
             });
         }
