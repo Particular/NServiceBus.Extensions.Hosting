@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
     using AcceptanceTesting.Support;
     using Castle.Windsor.MsDependencyInjection;
-    using Extensions.Hosting;
 
     public class DefaultServer : ExternallyManagedContainerServer
     {

@@ -7,8 +7,7 @@
     using Autofac.Core;
     using Autofac.Core.Registration;
     using Autofac.Extensions.DependencyInjection;
-    using Extensions.Hosting;
-
+ 
     public class DefaultServer : ExternallyManagedContainerServer
     {
         public override Task<EndpointConfiguration> GetConfiguration(RunDescriptor runDescriptor, EndpointCustomizationConfiguration endpointCustomizationConfiguration, Action<EndpointConfiguration> configurationBuilderCustomization)
