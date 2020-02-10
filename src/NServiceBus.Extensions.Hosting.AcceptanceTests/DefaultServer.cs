@@ -4,8 +4,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AcceptanceTesting.Support;
-    using Autofac;
-    using Autofac.Extensions.DependencyInjection;
     using Castle.Windsor.MsDependencyInjection;
     using Extensions.Hosting;
     using Lamar;
@@ -20,17 +18,6 @@
         {
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
-                endpointConfiguration.UseContainer(new AutofacServiceProviderFactory(c =>
-                {
-                    var types = endpointCustomizationConfiguration.GetTypesScopedByTestClass();
-                    foreach (var type in types)
-                    {
-                        if (IsMessageHandler(type))
-                        {
-                            c.RegisterType(type).AsImplementedInterfaces().AsSelf().PropertiesAutowired(PropertyWiringOptions.AllowCircularDependencies);
-                        }
-                    }
-                }));
 //                endpointConfiguration.UseContainer<ServiceRegistry>(new LamarServiceProviderFactory());
                 //                endpointConfiguration.UseServiceProviderFactory(new WindsorServiceProviderFactory());
                 //                endpointConfiguration.UseServiceProviderFactory<IUnityContainer>(new ServiceProviderFactory(null));
