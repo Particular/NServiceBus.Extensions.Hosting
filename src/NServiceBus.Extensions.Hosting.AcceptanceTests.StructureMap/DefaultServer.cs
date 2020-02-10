@@ -1,9 +1,10 @@
 ﻿namespace NServiceBus.AcceptanceTests.EndpointTemplates
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using AcceptanceTesting.Support;
+    using MessageInterfaces.MessageMapper.Reflection;
+    using StructureMap;
 
     public class DefaultServer : ExternallyManagedContainerServer
     {
@@ -11,25 +12,19 @@
         {
             return base.GetConfiguration(runDescriptor, endpointCustomizationConfiguration, endpointConfiguration =>
             {
-                //endpointConfiguration.UseContainer<ServiceRegistry>(new LamarServiceProviderFactory());
-                //endpointConfiguration.UseContainer(new DefaultServiceProviderFactory());
+                endpointConfiguration.UseContainer(new StructureMapServiceProviderFactory(new StructureMapPropertyInjectionRegistry()));
 
                 configurationBuilderCustomization(endpointConfiguration);
             });
         }
+    }
 
-        static Type IHandleMessagesType = typeof(IHandleMessages<>);
-        public static bool IsMessageHandler(Type type)
+    class StructureMapPropertyInjectionRegistry : Registry
+    {
+        public StructureMapPropertyInjectionRegistry()
         {
-            if (type.IsAbstract || type.IsGenericTypeDefinition)
-            {
-                return false;
-            }
-
-            return type.GetInterfaces()
-                .Where(@interface => @interface.IsGenericType)
-                .Select(@interface => @interface.GetGenericTypeDefinition())
-                .Any(genericTypeDef => genericTypeDef == IHandleMessagesType);
+            Policies.SetAllProperties(setterConvention => setterConvention.WithAnyTypeFromNamespace("NServiceBus.AcceptanceTests"));
+            Policies.FillAllPropertiesOfType<IMessageCreator>().Use<MessageMapper>();
         }
     }
 }
