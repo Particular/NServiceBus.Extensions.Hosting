@@ -5,6 +5,7 @@
     using AcceptanceTesting.Support;
     using Lamar;
     using MessageInterfaces.MessageMapper.Reflection;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class DefaultServer : ExternallyManagedContainerServer
     {
@@ -16,7 +17,7 @@
                 containerSettings.ConfigureContainer(registry =>
                 {
                     registry.Policies.SetAllProperties(setterConvention => setterConvention.WithAnyTypeFromNamespace("NServiceBus.AcceptanceTests"));
-                    registry.Policies.FillAllPropertiesOfType<IMessageCreator>().Use<MessageMapper>();
+                    registry.Policies.FillAllPropertiesOfType<IMessageCreator>();
                 });
 
                 configurationBuilderCustomization(endpointConfiguration);
