@@ -20,8 +20,9 @@
                 return;
             }
 
-            serviceCollection.Add(new ServiceDescriptor(concreteComponent, concreteComponent, Map(dependencyLifecycle)));
-            RegisterInterfaces(concreteComponent);
+            var serviceLifetime = Map(dependencyLifecycle);
+            serviceCollection.Add(new ServiceDescriptor(concreteComponent, concreteComponent, serviceLifetime));
+            RegisterInterfaces(concreteComponent,serviceLifetime);
         }
 
         public void ConfigureComponent<T>(DependencyLifecycle dependencyLifecycle)
@@ -37,8 +38,9 @@
                 return;
             }
 
-            serviceCollection.Add(new ServiceDescriptor(componentType, p => componentFactory(), Map(dependencyLifecycle)));
-            RegisterInterfaces(componentType);
+            var serviceLifetime = Map(dependencyLifecycle);
+            serviceCollection.Add(new ServiceDescriptor(componentType, p => componentFactory(), serviceLifetime));
+            RegisterInterfaces(componentType, serviceLifetime);
         }
 
         public void ConfigureComponent<T>(Func<IBuilder, T> componentFactory, DependencyLifecycle dependencyLifecycle)
@@ -49,8 +51,9 @@
                 return;
             }
 
-            serviceCollection.Add(new ServiceDescriptor(componentType, p => componentFactory(new ServiceProviderAdapter(p)), Map(dependencyLifecycle)));
-            RegisterInterfaces(componentType);
+            var serviceLifetime = Map(dependencyLifecycle);
+            serviceCollection.Add(new ServiceDescriptor(componentType, p => componentFactory(new ServiceProviderAdapter(p)), serviceLifetime));
+            RegisterInterfaces(componentType, serviceLifetime);
         }
 
         public bool HasComponent<T>()
@@ -73,13 +76,13 @@
             RegisterSingleton(typeof(T), instance);
         }
 
-        void RegisterInterfaces(Type component)
+        void RegisterInterfaces(Type component, ServiceLifetime serviceLifetime)
         {
             var interfaces = component.GetInterfaces();
             foreach (var serviceType in interfaces)
             {
                 // see https://andrewlock.net/how-to-register-a-service-with-multiple-interfaces-for-in-asp-net-core-di/
-                serviceCollection.Add(new ServiceDescriptor(serviceType, sp => sp.GetService(component), ServiceLifetime.Transient));
+                serviceCollection.Add(new ServiceDescriptor(serviceType, sp => sp.GetService(component), serviceLifetime));
             }
         }
 
