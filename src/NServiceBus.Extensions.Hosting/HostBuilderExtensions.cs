@@ -22,7 +22,7 @@
 
                 if (addMessageSessionToServiceCollection)
                 {
-					serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
+                    serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
                 }
                 serviceCollection.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(startableEndpoint, serviceProvider));
             });
