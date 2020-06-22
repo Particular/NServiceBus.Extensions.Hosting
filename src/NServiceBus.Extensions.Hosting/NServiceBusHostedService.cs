@@ -1,23 +1,19 @@
 ﻿namespace NServiceBus.Extensions.Hosting
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
-    using NServiceBus;
 
     class NServiceBusHostedService : IHostedService
     {
-        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider)
+        public NServiceBusHostedService(IEndpointInstanceStarter endpointInstanceStarter)
         {
-            this.startableEndpoint = startableEndpoint;
-            this.serviceProvider = serviceProvider;
+            this.endpointInstanceStarter = endpointInstanceStarter;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
-                .ConfigureAwait(false);
+            endpoint = await endpointInstanceStarter.Start().ConfigureAwait(false);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -25,8 +21,7 @@
             return endpoint.Stop();
         }
 
-        IEndpointInstance endpoint;
-        readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
-        readonly IServiceProvider serviceProvider;
+        IStoppableEndpoint endpoint;
+        readonly IEndpointInstanceStarter endpointInstanceStarter;
     }
 }
