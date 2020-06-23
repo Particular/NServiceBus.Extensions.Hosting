@@ -1,26 +1,25 @@
 ﻿namespace NServiceBus.Extensions.Hosting
 {
-    using System;
+    using ObjectBuilder;
     using System.Threading.Tasks;
 
     class EndpointInstanceStarter : IEndpointInstanceStarter, IStoppableEndpoint
     {
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
-        readonly IServiceProvider serviceProvider;
+        readonly IBuilder builder;
 
         public EndpointInstanceStarter(
             IStartableEndpointWithExternallyManagedContainer startableEndpoint,
-            IServiceProvider serviceProvider)
+            IBuilder builder)
         {
             this.startableEndpoint = startableEndpoint;
-            this.serviceProvider = serviceProvider;
+            this.builder = builder;
         }
 
         /// <inheritdoc />
         public async Task<IStoppableEndpoint> Start()
         {
-            endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
-                .ConfigureAwait(false);
+            endpoint = await startableEndpoint.Start(builder).ConfigureAwait(false);
             return this;
         }
 

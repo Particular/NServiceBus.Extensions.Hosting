@@ -4,6 +4,7 @@
     using Extensions.Hosting;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using ObjectBuilder;
 
     /// <summary>
     /// Extension methods to configure NServiceBus for the .NET Core generic host.
@@ -28,6 +29,7 @@
             {
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
                 var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, new ServiceCollectionAdapter(serviceCollection));
+                serviceCollection.AddSingleton<IBuilder>(serviceProvider => new ServiceProviderAdapter(serviceProvider));
                 serviceCollection.AddSingleton(startableEndpoint);
                 serviceCollection.AddSingleton<IEndpointInstanceStarter, TEndpointInstanceStart>();
                 serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
