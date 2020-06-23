@@ -1,13 +1,10 @@
 ﻿namespace NServiceBus.Extensions.Hosting
 {
-    using ObjectBuilder;
     using System.Threading.Tasks;
+    using ObjectBuilder;
 
     class EndpointInstanceStarter : IEndpointInstanceStarter, IStoppableEndpoint
     {
-        readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
-        readonly IBuilder builder;
-
         public EndpointInstanceStarter(
             IStartableEndpointWithExternallyManagedContainer startableEndpoint,
             IBuilder builder)
@@ -23,7 +20,13 @@
             return this;
         }
 
-        Task IStoppableEndpoint.Stop() => endpoint.Stop();
+        Task IStoppableEndpoint.Stop()
+        {
+            return endpoint.Stop();
+        }
+
+        readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
+        readonly IBuilder builder;
 
         IEndpointInstance endpoint;
     }
