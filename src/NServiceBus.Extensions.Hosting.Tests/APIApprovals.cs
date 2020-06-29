@@ -10,7 +10,10 @@
         [Test]
         public void ApproveNServiceBus()
         {
-            var publicApi = ApiGenerator.GeneratePublicApi(typeof(HostBuilderExtensions).Assembly, excludeAttributes: new[] { "System.Runtime.Versioning.TargetFrameworkAttribute" });
+            var publicApi = typeof(HostBuilderExtensions).Assembly.GeneratePublicApi(new ApiGeneratorOptions
+            {
+                ExcludeAttributes = new[] { "System.Runtime.Versioning.TargetFrameworkAttribute" }
+            });
             Approver.Verify(publicApi);
         }
     }
