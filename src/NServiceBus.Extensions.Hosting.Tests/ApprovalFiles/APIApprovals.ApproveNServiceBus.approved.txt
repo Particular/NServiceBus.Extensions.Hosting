@@ -1,7 +1,15 @@
+namespace NServiceBus.Extensions.Hosting
+{
+    public interface IStartAndStopThisEndpoint
+    {
+        System.Threading.Tasks.Task Start();
+        System.Threading.Tasks.Task Stop();
+    }
+}
 namespace NServiceBus
 {
     public static class HostBuilderExtensions
     {
-        public static Microsoft.Extensions.Hosting.IHostBuilder UseNServiceBus(this Microsoft.Extensions.Hosting.IHostBuilder hostBuilder, System.Func<Microsoft.Extensions.Hosting.HostBuilderContext, NServiceBus.EndpointConfiguration> endpointConfigurationBuilder) { }
+        public static Microsoft.Extensions.Hosting.IHostBuilder UseNServiceBus(this Microsoft.Extensions.Hosting.IHostBuilder hostBuilder, System.Func<Microsoft.Extensions.Hosting.HostBuilderContext, NServiceBus.EndpointConfiguration> endpointConfigurationBuilder, bool autoStart = true) { }
     }
 }
