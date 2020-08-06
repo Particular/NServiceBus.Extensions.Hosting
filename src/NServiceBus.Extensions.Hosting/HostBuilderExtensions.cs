@@ -1,7 +1,6 @@
 ﻿namespace NServiceBus
 {
     using System;
-    using System.Linq;
     using Extensions.Hosting;
     using Logging;
     using Microsoft.Extensions.DependencyInjection;
@@ -23,33 +22,28 @@
 
             hostBuilder.ConfigureServices((ctx, serviceCollection) =>
             {
-                var endpointConfiguration = endpointConfigurationBuilder(ctx);
-                var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, new ServiceCollectionAdapter(serviceCollection));
-
-                if (serviceCollection.Any(x =>
-                    x.ServiceType == typeof(IHostedService) &&
-                    x.ImplementationFactory != null &&
-                    x.ImplementationFactory.Method.ReturnType == typeof(NServiceBusHostedService) &&
-                    x.Lifetime == ServiceLifetime.Singleton))
+                if (ctx.Properties.ContainsKey(HostBuilderExtensionInUse))
                 {
                     throw new InvalidOperationException(
                         "`UseNServiceBus` can only be used once on the same host instance because subsequent calls would override each other. For multi-endpoint hosting scenarios consult our documentation page.");
                 }
 
-                serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
-                serviceCollection.AddSingleton<IHostedService, NServiceBusHostedService>(Factory);
+                ctx.Properties.Add(HostBuilderExtensionInUse, null);
 
-                NServiceBusHostedService Factory(IServiceProvider serviceProvider)
-                {
-                    return new NServiceBusHostedService(
-                        startableEndpoint,
-                        serviceProvider,
-                        serviceProvider.GetRequiredService<ILoggerFactory>(),
-                        deferredLoggerFactory);
-                }
+                var endpointConfiguration = endpointConfigurationBuilder(ctx);
+                var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, new ServiceCollectionAdapter(serviceCollection));
+
+                serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
+                serviceCollection.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(
+                    startableEndpoint,
+                    serviceProvider,
+                    serviceProvider.GetRequiredService<ILoggerFactory>(),
+                    deferredLoggerFactory));
             });
 
             return hostBuilder;
         }
+
+        const string HostBuilderExtensionInUse = "NServiceBus.Extension.Hosting.UseNServiceBus";
     }
 }
