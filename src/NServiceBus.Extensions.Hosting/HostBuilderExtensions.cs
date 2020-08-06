@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus
 {
     using System;
+    using System.Linq;
     using Extensions.Hosting;
     using Logging;
     using Microsoft.Extensions.DependencyInjection;
@@ -25,12 +26,26 @@
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
                 var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, new ServiceCollectionAdapter(serviceCollection));
 
+                if (serviceCollection.Any(x =>
+                    x.ServiceType == typeof(IHostedService) &&
+                    x.ImplementationFactory != null &&
+                    x.ImplementationFactory.Method.ReturnType == typeof(NServiceBusHostedService) &&
+                    x.Lifetime == ServiceLifetime.Singleton))
+                {
+                    throw new InvalidOperationException("TODO");
+                }
+
                 serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
-                serviceCollection.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(
-                    startableEndpoint,
-                    serviceProvider,
-                    serviceProvider.GetRequiredService<ILoggerFactory>(),
-                    deferredLoggerFactory));
+                serviceCollection.AddSingleton<IHostedService, NServiceBusHostedService>(Factory);
+
+                NServiceBusHostedService Factory(IServiceProvider serviceProvider)
+                {
+                    return new NServiceBusHostedService(
+                        startableEndpoint,
+                        serviceProvider,
+                        serviceProvider.GetRequiredService<ILoggerFactory>(),
+                        deferredLoggerFactory);
+                }
             });
 
             return hostBuilder;
