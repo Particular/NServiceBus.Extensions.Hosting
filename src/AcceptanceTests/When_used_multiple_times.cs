@@ -9,7 +9,7 @@
     public class When_used_multiple_times
     {
         [Test]
-        public void Throws()
+        public void Throws_on_same_host()
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
@@ -23,7 +23,34 @@
                     })
                     .UseNServiceBus(hostBuilderContext =>
                     {
-                        var endpointConfiguration = new EndpointConfiguration("NSBRepro");
+                        var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
+                        endpointConfiguration.SendOnly();
+                        endpointConfiguration.UseTransport<LearningTransport>();
+                        return endpointConfiguration;
+                    })
+                    .Build();
+            });
+        }
+
+        [Test]
+        public void Does_not_throw_on_different_hosts()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                Host.CreateDefaultBuilder()
+                    .UseNServiceBus(hostBuilderContext =>
+                    {
+                        var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
+                        endpointConfiguration.SendOnly();
+                        endpointConfiguration.UseTransport<LearningTransport>();
+                        return endpointConfiguration;
+                    })
+                    .Build();
+
+                Host.CreateDefaultBuilder()
+                    .UseNServiceBus(hostBuilderContext =>
+                    {
+                        var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
                         endpointConfiguration.SendOnly();
                         endpointConfiguration.UseTransport<LearningTransport>();
                         return endpointConfiguration;
