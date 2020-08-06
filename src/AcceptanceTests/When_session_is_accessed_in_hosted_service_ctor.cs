@@ -9,10 +9,10 @@
     using System;
 
     [TestFixture]
-    public class When_session_is_injected_into_hosted_service
+    public class When_session_is_accessed_in_hosted_service_ctor
     {
         [Test]
-        public void Should_throw_when_accessed_in_ctor()
+        public void Should_throw()
         {
             var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
@@ -34,10 +34,11 @@
 
         class HostedServiceThatAccessSessionInCtor : IHostedService
         {
-            public HostedServiceThatAccessSessionInCtor(IMessageSession messageSession)
+            public HostedServiceThatAccessSessionInCtor(IServiceProvider serviceProvider)
             {
-                messageSession.Publish<MyEvent>().GetAwaiter().GetResult();
+                serviceProvider.GetService<IMessageSession>().Publish<MyEvent>().GetAwaiter().GetResult();
             }
+
             public Task StartAsync(CancellationToken cancellationToken)
             {
                 return Task.CompletedTask;
