@@ -29,7 +29,7 @@
                 await host.StartAsync();
             });
 
-            StringAssert.Contains("The message session can't be used before the NServiceBus hosted service is started", ex.Message);
+            StringAssert.Contains("The message session can't be used before NServiceBus is started", ex.Message);
         }
 
         class HostedServiceThatAccessSessionInCtor : IHostedService

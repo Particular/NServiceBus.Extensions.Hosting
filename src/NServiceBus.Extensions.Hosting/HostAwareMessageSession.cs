@@ -64,7 +64,7 @@
                 return;
             }
 
-            throw new InvalidOperationException("The message session can't be used before the NServiceBus is started. Place `UseNServiceBus()` on the host builder before registering any hosted service (i.ex. `services.AddHostedService<HostedServiceAccessingTheSession>()`) or the web host configuration (i.ex. `builder.ConfigureWebHostDefaults`) should hosted services or controllers require access to the session.");
+            throw new InvalidOperationException("The message session can't be used before NServiceBus is started. Place `UseNServiceBus()` on the host builder before registering any hosted service (i.ex. `services.AddHostedService<HostedServiceAccessingTheSession>()`) or the web host configuration (i.ex. `builder.ConfigureWebHostDefaults`) should hosted services or controllers require access to the session.");
         }
 
         bool isReadyForUse;
