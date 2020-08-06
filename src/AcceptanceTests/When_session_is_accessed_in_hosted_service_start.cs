@@ -48,7 +48,7 @@
                 await host.StartAsync();
             });
 
-            StringAssert.Contains("The message session can only be used after the endpoint is started", ex.Message);
+            StringAssert.Contains("The message session can't be used before the NServiceBus hosted service is started", ex.Message);
         }
 
         class HostedServiceThatAccessSessionInStart : IHostedService

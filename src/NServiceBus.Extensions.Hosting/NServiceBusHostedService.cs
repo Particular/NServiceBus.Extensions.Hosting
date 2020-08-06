@@ -9,10 +9,15 @@
 
     class NServiceBusHostedService : IHostedService
     {
-        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider, ILoggerFactory loggerFactory, DeferredLoggerFactory deferredLoggerFactory)
+        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint,
+            IServiceProvider serviceProvider,
+            ILoggerFactory loggerFactory,
+            DeferredLoggerFactory deferredLoggerFactory,
+            HostAwareMessageSession hostAwareMessageSession)
         {
             this.loggerFactory = loggerFactory;
             this.deferredLoggerFactory = deferredLoggerFactory;
+            this.hostAwareMessageSession = hostAwareMessageSession;
             this.startableEndpoint = startableEndpoint;
             this.serviceProvider = serviceProvider;
         }
@@ -24,6 +29,8 @@
 
             endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
                 .ConfigureAwait(false);
+
+            hostAwareMessageSession.MarkReadyForUse();
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -34,6 +41,7 @@
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
         readonly IServiceProvider serviceProvider;
         readonly DeferredLoggerFactory deferredLoggerFactory;
+        readonly HostAwareMessageSession hostAwareMessageSession;
         readonly ILoggerFactory loggerFactory;
 
         IEndpointInstance endpoint;
