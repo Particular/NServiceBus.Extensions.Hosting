@@ -3,19 +3,25 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Logging;
     using Microsoft.Extensions.Hosting;
-    using NServiceBus;
+    using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     class NServiceBusHostedService : IHostedService
     {
-        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider)
+        public NServiceBusHostedService(IStartableEndpointWithExternallyManagedContainer startableEndpoint, IServiceProvider serviceProvider, ILoggerFactory loggerFactory, DeferredLoggerFactory deferredLoggerFactory)
         {
+            this.loggerFactory = loggerFactory;
+            this.deferredLoggerFactory = deferredLoggerFactory;
             this.startableEndpoint = startableEndpoint;
             this.serviceProvider = serviceProvider;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
+            LogManager.UseFactory(new LoggerFactory(loggerFactory));
+            deferredLoggerFactory.FlushAll(loggerFactory);
+
             endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
                 .ConfigureAwait(false);
         }
@@ -25,8 +31,11 @@
             return endpoint.Stop();
         }
 
-        IEndpointInstance endpoint;
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
         readonly IServiceProvider serviceProvider;
+        readonly DeferredLoggerFactory deferredLoggerFactory;
+        readonly ILoggerFactory loggerFactory;
+
+        IEndpointInstance endpoint;
     }
 }

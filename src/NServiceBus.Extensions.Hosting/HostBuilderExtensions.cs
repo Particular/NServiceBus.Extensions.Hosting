@@ -2,8 +2,10 @@
 {
     using System;
     using Extensions.Hosting;
+    using Logging;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     /// <summary>
     /// Extension methods to configure NServiceBus for the .NET Core generic host.
@@ -15,13 +17,20 @@
         /// </summary>
         public static IHostBuilder UseNServiceBus(this IHostBuilder hostBuilder, Func<HostBuilderContext, EndpointConfiguration> endpointConfigurationBuilder)
         {
+            var deferredLoggerFactory = new DeferredLoggerFactory();
+            LogManager.UseFactory(deferredLoggerFactory);
+
             hostBuilder.ConfigureServices((ctx, serviceCollection) =>
             {
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
                 var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, new ServiceCollectionAdapter(serviceCollection));
 
                 serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
-                serviceCollection.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(startableEndpoint, serviceProvider));
+                serviceCollection.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(
+                    startableEndpoint,
+                    serviceProvider,
+                    serviceProvider.GetRequiredService<ILoggerFactory>(),
+                    deferredLoggerFactory));
             });
 
             return hostBuilder;
