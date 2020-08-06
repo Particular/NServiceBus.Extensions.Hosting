@@ -19,7 +19,7 @@
                 var host = Host.CreateDefaultBuilder()
                 .UseNServiceBus(hostBuilderContext =>
                 {
-                  var endpointConfiguration = new EndpointConfiguration("NSBRepro");
+                  var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                   endpointConfiguration.SendOnly();
                   endpointConfiguration.UseTransport<LearningTransport>();
                   return endpointConfiguration;
@@ -34,9 +34,9 @@
 
         class HostedServiceThatAccessSessionInCtor : IHostedService
         {
-            public HostedServiceThatAccessSessionInCtor(IServiceProvider serviceProvider)
+            public HostedServiceThatAccessSessionInCtor(IMessageSession messageSession)
             {
-                serviceProvider.GetService<IMessageSession>().Publish<MyEvent>().GetAwaiter().GetResult();
+                messageSession.Publish<MyEvent>().GetAwaiter().GetResult();
             }
 
             public Task StartAsync(CancellationToken cancellationToken)

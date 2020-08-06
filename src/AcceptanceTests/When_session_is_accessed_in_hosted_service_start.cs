@@ -17,7 +17,7 @@
             var host = Host.CreateDefaultBuilder()
                 .UseNServiceBus(hostBuilderContext =>
                 {
-                    var endpointConfiguration = new EndpointConfiguration("NSBRepro");
+                    var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                     endpointConfiguration.SendOnly();
                     endpointConfiguration.UseTransport<LearningTransport>();
                     return endpointConfiguration;
@@ -30,7 +30,7 @@
         }
 
         [Test]
-        public void Should_throw_when_configured_before_NServiceBus()
+        public void Should_throw_when_hosted_service_is_configured_before_NServiceBus()
         {
             var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
@@ -38,7 +38,7 @@
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInStart>())
                 .UseNServiceBus(hostBuilderContext =>
                   {
-                      var endpointConfiguration = new EndpointConfiguration("NSBRepro");
+                      var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                       endpointConfiguration.SendOnly();
                       endpointConfiguration.UseTransport<LearningTransport>();
                       return endpointConfiguration;
@@ -53,13 +53,13 @@
 
         class HostedServiceThatAccessSessionInStart : IHostedService
         {
-            public HostedServiceThatAccessSessionInStart(IServiceProvider serviceProvider)
+            public HostedServiceThatAccessSessionInStart(IMessageSession messageSession)
             {
-                this.serviceProvider = serviceProvider;
+                this.messageSession = messageSession;
             }
             public Task StartAsync(CancellationToken cancellationToken)
             {
-                return serviceProvider.GetService<IMessageSession>().Publish<MyEvent>();
+                return messageSession.Publish<MyEvent>();
             }
 
             public Task StopAsync(CancellationToken cancellationToken)
@@ -71,7 +71,7 @@
             {
             }
 
-            readonly IServiceProvider serviceProvider;
+            readonly IMessageSession messageSession;
         }
     }
 }
