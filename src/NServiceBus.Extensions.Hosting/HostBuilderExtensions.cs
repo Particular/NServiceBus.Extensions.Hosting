@@ -32,7 +32,8 @@
                     x.ImplementationFactory.Method.ReturnType == typeof(NServiceBusHostedService) &&
                     x.Lifetime == ServiceLifetime.Singleton))
                 {
-                    throw new InvalidOperationException("TODO");
+                    throw new InvalidOperationException(
+                        "`UseNServiceBus` can only be used once on the same host instance because subsequent calls would override each other. For multi-endpoint hosting scenarios consult our documentation page.");
                 }
 
                 serviceCollection.AddSingleton(_ => startableEndpoint.MessageSession.Value);
