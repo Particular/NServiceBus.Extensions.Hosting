@@ -1,10 +1,10 @@
 ﻿namespace AcceptanceTests
 {
-    using Microsoft.Extensions.Hosting;
-    using NUnit.Framework;
-    using NServiceBus;
-    using Microsoft.Extensions.DependencyInjection;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using NServiceBus;
+    using NUnit.Framework;
 
     [TestFixture]
     public class When_started_up
@@ -22,11 +22,16 @@
                 })
                 .Build();
 
-            await host.StartAsync();
+            try
+            {
+                await host.StartAsync();
 
-            Assert.NotNull(host.Services.GetService<IMessageSession>());
-
-            await host.StopAsync();
+                Assert.NotNull(host.Services.GetService<IMessageSession>());
+            }
+            finally
+            {
+                await host.StopAsync();
+            }
         }
     }
 }

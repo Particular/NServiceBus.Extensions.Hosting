@@ -22,6 +22,14 @@
 
             hostBuilder.ConfigureServices((ctx, serviceCollection) =>
             {
+                if (ctx.Properties.ContainsKey(HostBuilderExtensionInUse))
+                {
+                    throw new InvalidOperationException(
+                        "`UseNServiceBus` can only be used once on the same host instance because subsequent calls would override each other. For multi-endpoint hosting scenarios consult our documentation page.");
+                }
+
+                ctx.Properties.Add(HostBuilderExtensionInUse, null);
+
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
                 var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, new ServiceCollectionAdapter(serviceCollection));
 
@@ -35,5 +43,7 @@
 
             return hostBuilder;
         }
+
+        const string HostBuilderExtensionInUse = "NServiceBus.Extension.Hosting.UseNServiceBus";
     }
 }
