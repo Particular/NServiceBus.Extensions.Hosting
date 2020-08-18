@@ -27,7 +27,7 @@
             LogManager.UseFactory(new LoggerFactory(loggerFactory));
             deferredLoggerFactory.FlushAll(loggerFactory);
 
-            endpoint = await startableEndpoint.Start(new ServiceProviderAdapter(serviceProvider))
+            endpoint = await startableEndpoint.Start(serviceProvider)
                 .ConfigureAwait(false);
 
             hostAwareMessageSession.MarkReadyForUse();

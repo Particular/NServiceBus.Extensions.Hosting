@@ -31,7 +31,7 @@
                 ctx.Properties.Add(HostBuilderExtensionInUse, null);
 
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
-                var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, new ServiceCollectionAdapter(serviceCollection));
+                var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, serviceCollection);
 
                 serviceCollection.AddSingleton(_ => new HostAwareMessageSession(startableEndpoint.MessageSession));
                 serviceCollection.AddSingleton<IMessageSession>(serviceProvider => serviceProvider.GetService<HostAwareMessageSession>());
