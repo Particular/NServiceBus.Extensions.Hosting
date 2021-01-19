@@ -7,7 +7,7 @@
     class DeferredLoggerFactory :
         ILoggerFactory
     {
-        private readonly ConcurrentBag<DeferredLogger> acquiredLoggers = new ConcurrentBag<DeferredLogger>();
+        readonly ConcurrentBag<DeferredLogger> acquiredLoggers = new ConcurrentBag<DeferredLogger>();
 
         public ILog GetLogger(Type type)
         {

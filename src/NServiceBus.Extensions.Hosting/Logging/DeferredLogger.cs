@@ -236,7 +236,7 @@
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            
+
             while (deferredFormatLogs.TryDequeue(out var entry))
             {
                 switch (entry.level)
