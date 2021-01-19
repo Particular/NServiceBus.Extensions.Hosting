@@ -22,7 +22,7 @@
 
             var serviceLifetime = Map(dependencyLifecycle);
             serviceCollection.Add(new ServiceDescriptor(concreteComponent, concreteComponent, serviceLifetime));
-            RegisterInterfaces(concreteComponent,serviceLifetime);
+            RegisterInterfaces(concreteComponent, serviceLifetime);
         }
 
         public void ConfigureComponent<T>(DependencyLifecycle dependencyLifecycle)
@@ -92,10 +92,14 @@
         {
             switch (lifetime)
             {
-                case DependencyLifecycle.SingleInstance: return ServiceLifetime.Singleton;
-                case DependencyLifecycle.InstancePerCall: return ServiceLifetime.Transient;
-                case DependencyLifecycle.InstancePerUnitOfWork: return ServiceLifetime.Scoped;
-                default: throw new NotSupportedException();
+                case DependencyLifecycle.SingleInstance:
+                    return ServiceLifetime.Singleton;
+                case DependencyLifecycle.InstancePerCall:
+                    return ServiceLifetime.Transient;
+                case DependencyLifecycle.InstancePerUnitOfWork:
+                    return ServiceLifetime.Scoped;
+                default:
+                    throw new NotSupportedException();
             }
         }
     }

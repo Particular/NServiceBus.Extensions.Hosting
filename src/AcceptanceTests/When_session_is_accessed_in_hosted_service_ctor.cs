@@ -19,10 +19,10 @@
                 var host = Host.CreateDefaultBuilder()
                 .UseNServiceBus(hostBuilderContext =>
                 {
-                  var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
-                  endpointConfiguration.SendOnly();
-                  endpointConfiguration.UseTransport<LearningTransport>();
-                  return endpointConfiguration;
+                    var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
+                    endpointConfiguration.SendOnly();
+                    endpointConfiguration.UseTransport<LearningTransport>();
+                    return endpointConfiguration;
                 })
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInCtor>()).Build();
 
