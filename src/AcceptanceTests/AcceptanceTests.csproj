@@ -9,7 +9,6 @@
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="NServiceBus" Version="8.0.0-alpha.630" />
-    <PackageReference Include="Particular.CodeRules" Version="0.7.0" />
   </ItemGroup>
 
   <ItemGroup>
