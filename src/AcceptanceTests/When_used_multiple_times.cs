@@ -18,14 +18,14 @@
                     {
                         var endpointConfiguration = new EndpointConfiguration("NSBRepro");
                         endpointConfiguration.SendOnly();
-                        endpointConfiguration.UseTransport<LearningTransport>();
+                        endpointConfiguration.UseTransport(new LearningTransport());
                         return endpointConfiguration;
                     })
                     .UseNServiceBus(hostBuilderContext =>
                     {
                         var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
                         endpointConfiguration.SendOnly();
-                        endpointConfiguration.UseTransport<LearningTransport>();
+                        endpointConfiguration.UseTransport(new LearningTransport());
                         return endpointConfiguration;
                     })
                     .Build();
@@ -42,7 +42,7 @@
                     {
                         var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
                         endpointConfiguration.SendOnly();
-                        endpointConfiguration.UseTransport<LearningTransport>();
+                        endpointConfiguration.UseTransport(new LearningTransport());
                         return endpointConfiguration;
                     })
                     .Build();
@@ -52,7 +52,7 @@
                     {
                         var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
                         endpointConfiguration.SendOnly();
-                        endpointConfiguration.UseTransport<LearningTransport>();
+                        endpointConfiguration.UseTransport(new LearningTransport());
                         return endpointConfiguration;
                     })
                     .Build();

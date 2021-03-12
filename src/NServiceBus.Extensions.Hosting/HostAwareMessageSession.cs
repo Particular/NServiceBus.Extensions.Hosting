@@ -1,6 +1,7 @@
 ﻿namespace NServiceBus
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
     class HostAwareMessageSession : IMessageSession
@@ -10,46 +11,46 @@
             this.messageSession = messageSession;
         }
 
-        public Task Send(object message, SendOptions options)
+        public Task Send(object message, SendOptions options, CancellationToken cancellationToken = default)
         {
             GuardAgainstTooEarlyUse();
 
-            return messageSession.Value.Send(message, options);
+            return messageSession.Value.Send(message, options, cancellationToken);
         }
 
-        public Task Send<T>(Action<T> messageConstructor, SendOptions options)
+        public Task Send<T>(Action<T> messageConstructor, SendOptions options, CancellationToken cancellationToken = default)
         {
             GuardAgainstTooEarlyUse();
 
-            return messageSession.Value.Send(messageConstructor, options);
+            return messageSession.Value.Send(messageConstructor, options, cancellationToken);
         }
 
-        public Task Publish(object message, PublishOptions options)
+        public Task Publish(object message, PublishOptions options, CancellationToken cancellationToken = default)
         {
             GuardAgainstTooEarlyUse();
 
-            return messageSession.Value.Publish(message, options);
+            return messageSession.Value.Publish(message, options, cancellationToken);
         }
 
-        public Task Publish<T>(Action<T> messageConstructor, PublishOptions options)
+        public Task Publish<T>(Action<T> messageConstructor, PublishOptions options, CancellationToken cancellationToken = default)
         {
             GuardAgainstTooEarlyUse();
 
-            return messageSession.Value.Publish(messageConstructor, options);
+            return messageSession.Value.Publish(messageConstructor, options, cancellationToken);
         }
 
-        public Task Subscribe(Type eventType, SubscribeOptions options)
+        public Task Subscribe(Type eventType, SubscribeOptions options, CancellationToken cancellationToken = default)
         {
             GuardAgainstTooEarlyUse();
 
-            return messageSession.Value.Subscribe(eventType, options);
+            return messageSession.Value.Subscribe(eventType, options, cancellationToken);
         }
 
-        public Task Unsubscribe(Type eventType, UnsubscribeOptions options)
+        public Task Unsubscribe(Type eventType, UnsubscribeOptions options, CancellationToken cancellationToken = default)
         {
             GuardAgainstTooEarlyUse();
 
-            return messageSession.Value.Unsubscribe(eventType, options);
+            return messageSession.Value.Unsubscribe(eventType, options, cancellationToken);
         }
 
         public void MarkReadyForUse()
