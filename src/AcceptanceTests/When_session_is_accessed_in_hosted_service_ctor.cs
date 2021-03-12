@@ -21,7 +21,7 @@
                 {
                     var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                     endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport<LearningTransport>();
+                    endpointConfiguration.UseTransport(new LearningTransport());
                     return endpointConfiguration;
                 })
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInCtor>()).Build();

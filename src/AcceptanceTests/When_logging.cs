@@ -33,9 +33,10 @@
                     var logger = LogManager.GetLogger("TestLogger");
                     logger.Warn(ExpectedLogMessage);
                     logger.Debug(NotExpectedLogMessage);
+
                     var endpointConfiguration = new EndpointConfiguration("NSBRepro");
-                    var transport = endpointConfiguration.UseTransport<LearningTransport>();
-                    transport.StorageDirectory(TestContext.CurrentContext.TestDirectory);
+                    endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
+
                     return endpointConfiguration;
                 })
                 .Build();

@@ -27,7 +27,7 @@
             LogManager.UseFactory(new LoggerFactory(loggerFactory));
             deferredLoggerFactory.FlushAll(loggerFactory);
 
-            endpoint = await startableEndpoint.Start(serviceProvider)
+            endpoint = await startableEndpoint.Start(serviceProvider, cancellationToken)
                 .ConfigureAwait(false);
 
             hostAwareMessageSession.MarkReadyForUse();
@@ -35,7 +35,7 @@
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return endpoint.Stop();
+            return endpoint.Stop(cancellationToken);
         }
 
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;

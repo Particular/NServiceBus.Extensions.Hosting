@@ -19,7 +19,7 @@
                 {
                     var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                     endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport<LearningTransport>();
+                    endpointConfiguration.UseTransport(new LearningTransport());
                     return endpointConfiguration;
                 })
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInStart>())
@@ -40,7 +40,7 @@
                   {
                       var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                       endpointConfiguration.SendOnly();
-                      endpointConfiguration.UseTransport<LearningTransport>();
+                      endpointConfiguration.UseTransport(new LearningTransport());
                       return endpointConfiguration;
                   })
                 .Build();
@@ -59,7 +59,7 @@
             }
             public Task StartAsync(CancellationToken cancellationToken)
             {
-                return messageSession.Publish<MyEvent>();
+                return messageSession.Publish<MyEvent>(cancellationToken);
             }
 
             public Task StopAsync(CancellationToken cancellationToken)
