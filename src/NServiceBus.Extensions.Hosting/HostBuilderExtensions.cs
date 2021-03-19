@@ -17,6 +17,19 @@
         /// </summary>
         public static IHostBuilder UseNServiceBus(this IHostBuilder hostBuilder, Func<HostBuilderContext, EndpointConfiguration> endpointConfigurationBuilder)
         {
+            hostBuilder.ConfigureServices((ctx, serviceCollection) =>
+            {
+                serviceCollection.AddSingleton<IEndpointConfigurationBuilder>(_ => new UserActionEndpointConfigurationBuilder(endpointConfigurationBuilder, ctx));
+            });
+
+            return hostBuilder.UseNServiceBus();
+        }
+
+        /// <summary>
+        /// Configures the host to start an NServiceBus endpoint configured by an implementation of <see cref="IEndpointConfigurationBuilder"/>.
+        /// </summary>
+        public static IHostBuilder UseNServiceBus(this IHostBuilder hostBuilder)
+        {
             var deferredLoggerFactory = new DeferredLoggerFactory();
             LogManager.UseFactory(deferredLoggerFactory);
 
@@ -30,17 +43,13 @@
 
                 ctx.Properties.Add(HostBuilderExtensionInUse, null);
 
-                var endpointConfiguration = endpointConfigurationBuilder(ctx);
-                var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, serviceCollection);
-
-                serviceCollection.AddSingleton(_ => new HostAwareMessageSession(startableEndpoint.MessageSession));
-                serviceCollection.AddSingleton<IMessageSession>(serviceProvider => serviceProvider.GetService<HostAwareMessageSession>());
-                serviceCollection.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(
-                    startableEndpoint,
-                    serviceProvider,
+                serviceCollection.AddSingleton<IMessageSession>(serviceProvider => serviceProvider.GetService<NServiceBusHostedService>());
+                serviceCollection.AddSingleton(serviceProvider => new NServiceBusHostedService(
+                    serviceProvider.GetRequiredService<IEndpointConfigurationBuilder>(),
+                    serviceCollection,
                     serviceProvider.GetRequiredService<ILoggerFactory>(),
-                    deferredLoggerFactory,
-                    serviceProvider.GetRequiredService<HostAwareMessageSession>()));
+                    deferredLoggerFactory));
+                serviceCollection.AddSingleton<IHostedService>(serviceProvider => serviceProvider.GetService<NServiceBusHostedService>());
             });
 
             return hostBuilder;
