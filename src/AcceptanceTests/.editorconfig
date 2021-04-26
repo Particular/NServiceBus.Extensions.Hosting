@@ -2,3 +2,6 @@
 
 # Justification: Test project
 dotnet_diagnostic.CA2007.severity = none
+
+# PS0003: A parameter of type CancellationToken on a non-private delegate or method should be optional
+dotnet_diagnostic.PS0003.severity = suggestion

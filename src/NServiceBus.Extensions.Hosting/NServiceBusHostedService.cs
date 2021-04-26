@@ -22,7 +22,7 @@
             this.serviceProvider = serviceProvider;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             LogManager.UseFactory(new LoggerFactory(loggerFactory));
             deferredLoggerFactory.FlushAll(loggerFactory);
@@ -33,7 +33,7 @@
             hostAwareMessageSession.MarkReadyForUse();
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             return endpoint.Stop(cancellationToken);
         }
