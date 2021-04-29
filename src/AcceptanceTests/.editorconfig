@@ -5,3 +5,6 @@ dotnet_diagnostic.CA2007.severity = none
 
 # PS0003: A parameter of type CancellationToken on a non-private delegate or method should be optional
 dotnet_diagnostic.PS0003.severity = suggestion
+
+# Justification: Tests don't support cancellation and don't need to forward IMessageHandlerContext.CancellationToken
+dotnet_diagnostic.NSB0002.severity = suggestion
