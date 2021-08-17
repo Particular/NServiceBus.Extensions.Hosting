@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.9" />
-    <PackageReference Include="NServiceBus" Version="[8.0.0-alpha.940, 9.0.0)" />
+    <PackageReference Include="NServiceBus" Version="[8.0.0-alpha.1896, 9.0.0)" />
     <PackageReference Include="Particular.Packaging" Version="1.2.1" PrivateAssets="All" />
   </ItemGroup>
 
