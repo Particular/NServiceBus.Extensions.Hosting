@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="NServiceBus" Version="8.0.0-beta.3" />
+    <PackageReference Include="NServiceBus" Version="8.0.0-beta.5" />
   </ItemGroup>
 
   <ItemGroup>
