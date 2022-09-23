@@ -33,10 +33,8 @@
             hostAwareMessageSession.MarkReadyForUse();
         }
 
-        public Task StopAsync(CancellationToken cancellationToken = default)
-        {
-            return endpoint.Stop(cancellationToken);
-        }
+        public Task StopAsync(CancellationToken cancellationToken = default) =>
+            endpoint?.Stop(cancellationToken) ?? Task.CompletedTask;
 
         readonly IStartableEndpointWithExternallyManagedContainer startableEndpoint;
         readonly IServiceProvider serviceProvider;
