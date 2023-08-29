@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <MinVerMinimumMajorMinor>2.1</MinVerMinimumMajorMinor>
+    <MinVerMinimumMajorMinor>3.0</MinVerMinimumMajorMinor>
     <MinVerAutoIncrement>minor</MinVerAutoIncrement>
   </PropertyGroup>
 
