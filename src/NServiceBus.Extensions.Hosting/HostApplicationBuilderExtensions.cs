@@ -18,7 +18,7 @@
         /// <param name="builder"></param>
         /// <param name="configureEndpoint"></param>
         /// <returns></returns>
-        public static IHostApplicationBuilder UseNServiceBus(this IHostApplicationBuilder builder, Func<IHostApplicationBuilder, EndpointConfiguration> configureEndpoint)
+        public static IHostApplicationBuilder UseNServiceBus(this IHostApplicationBuilder builder, Func<EndpointConfiguration> configureEndpoint)
         {
             var deferredLoggerFactory = new DeferredLoggerFactory();
             LogManager.UseFactory(deferredLoggerFactory);
@@ -31,7 +31,7 @@
 
             builder.Properties.Add(HostBuilderExtensionInUse, null);
 
-            var endpointConfiguration = configureEndpoint(builder);
+            var endpointConfiguration = configureEndpoint();
             var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, builder.Services);
 
             builder.Services.AddSingleton(_ => new HostAwareMessageSession(startableEndpoint.MessageSession));
