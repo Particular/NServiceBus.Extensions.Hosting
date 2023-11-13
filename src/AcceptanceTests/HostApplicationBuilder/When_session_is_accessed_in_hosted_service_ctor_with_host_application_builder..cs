@@ -1,30 +1,34 @@
 ﻿namespace AcceptanceTests
 {
-    using Microsoft.Extensions.Hosting;
-    using NUnit.Framework;
-    using NServiceBus;
-    using Microsoft.Extensions.DependencyInjection;
-    using System.Threading.Tasks;
-    using System.Threading;
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using NServiceBus;
+    using NUnit.Framework;
 
     [TestFixture]
-    public class When_session_is_accessed_in_hosted_service_ctor
+    public class When_session_is_accessed_in_hosted_service_ctor_with_host_application_builder
     {
         [Test]
         public void Should_throw()
         {
             var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                var host = Host.CreateDefaultBuilder()
-                .UseNServiceBus(hostBuilderContext =>
+                var hostBuilder = Host.CreateApplicationBuilder();
+
+                hostBuilder.UseNServiceBus(() =>
                 {
                     var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                     endpointConfiguration.SendOnly();
                     endpointConfiguration.UseTransport(new LearningTransport());
                     return endpointConfiguration;
-                })
-                .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInCtor>()).Build();
+                });
+
+                hostBuilder.Services.AddHostedService<HostedServiceThatAccessSessionInCtor>();
+
+                var host = hostBuilder.Build();
 
                 await host.StartAsync();
             });

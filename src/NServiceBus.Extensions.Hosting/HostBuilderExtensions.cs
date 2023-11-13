@@ -8,7 +8,7 @@
     using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     /// <summary>
-    /// Extension methods to configure NServiceBus for the .NET Core generic host.
+    /// Extension methods to configure NServiceBus for the .NET generic host.
     /// </summary>
     public static class HostBuilderExtensions
     {
