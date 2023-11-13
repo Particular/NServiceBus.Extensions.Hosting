@@ -6,7 +6,7 @@
     using NUnit.Framework;
 
     [TestFixture]
-    public class When_used_multiple_times
+    public class When_used_multiple_times_with_host_builder
     {
         [Test]
         public void Throws_on_same_host()

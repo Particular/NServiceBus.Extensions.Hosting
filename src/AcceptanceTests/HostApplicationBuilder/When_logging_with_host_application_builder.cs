@@ -11,7 +11,7 @@
     using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
     [TestFixture]
-    public class When_logging
+    public class When_logging_with_host_application_builder
     {
         [Test]
         public async Task Should_integrate_with_default_host_logging()
@@ -21,25 +21,24 @@
             var ExpectedLogMessage = "We want to see this";
             var NotExpectedLogMessage = "We don't want to see this";
 
-            var host = Host.CreateDefaultBuilder()
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Warning);
-                    logging.AddProvider(new StringBuilderProvider(builder));
-                })
-                .UseNServiceBus(hostBuilderContext =>
-                {
-                    var logger = LogManager.GetLogger("TestLogger");
-                    logger.Warn(ExpectedLogMessage);
-                    logger.Debug(NotExpectedLogMessage);
+            var hostBuilder = Host.CreateApplicationBuilder();
+            hostBuilder.Logging.ClearProviders();
+            hostBuilder.Logging.SetMinimumLevel(LogLevel.Warning);
+            hostBuilder.Logging.AddProvider(new StringBuilderProvider(builder));
 
-                    var endpointConfiguration = new EndpointConfiguration("NSBRepro");
-                    endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
+            hostBuilder.UseNServiceBus(() =>
+            {
+                var logger = LogManager.GetLogger("TestLogger");
+                logger.Warn(ExpectedLogMessage);
+                logger.Debug(NotExpectedLogMessage);
 
-                    return endpointConfiguration;
-                })
-                .Build();
+                var endpointConfiguration = new EndpointConfiguration("NSBRepro");
+                endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
+
+                return endpointConfiguration;
+            });
+
+            var host = hostBuilder.Build();
 
             try
             {
