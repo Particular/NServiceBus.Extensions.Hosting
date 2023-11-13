@@ -8,17 +8,15 @@
     using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     /// <summary>
-    /// Extension methods to configure NServiceBus for the .NET Core generic host.
+    /// Extension methods to configure NServiceBus for the .NET hosted applications builder.
     /// </summary>
     public static class HostApplicationBuilderExtensions
     {
         /// <summary>
-        /// Configures the host to start an NServiceBus endpoint.
+        /// Configures the host application builder to start an NServiceBus endpoint.
         /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="configureEndpoint"></param>
         /// <returns></returns>
-        public static IHostApplicationBuilder UseNServiceBus(this IHostApplicationBuilder builder, Func<EndpointConfiguration> configureEndpoint)
+        public static IHostApplicationBuilder UseNServiceBus(this IHostApplicationBuilder builder, Func<EndpointConfiguration> endpointConfigurationBuilder)
         {
             var deferredLoggerFactory = new DeferredLoggerFactory();
             LogManager.UseFactory(deferredLoggerFactory);
@@ -31,7 +29,7 @@
 
             builder.Properties.Add(HostBuilderExtensionInUse, null);
 
-            var endpointConfiguration = configureEndpoint();
+            var endpointConfiguration = endpointConfigurationBuilder();
             var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, builder.Services);
 
             builder.Services.AddSingleton(_ => new HostAwareMessageSession(startableEndpoint.MessageSession));
