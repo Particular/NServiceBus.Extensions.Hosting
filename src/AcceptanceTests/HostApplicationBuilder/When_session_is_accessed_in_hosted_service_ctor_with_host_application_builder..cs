@@ -21,6 +21,7 @@
                 var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                 endpointConfiguration.SendOnly();
                 endpointConfiguration.UseTransport(new LearningTransport());
+                endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
                 hostBuilder.UseNServiceBus(endpointConfiguration);
 

@@ -18,12 +18,14 @@
                 var endpointConfiguration1 = new EndpointConfiguration("NSBRepro");
                 endpointConfiguration1.SendOnly();
                 endpointConfiguration1.UseTransport(new LearningTransport());
+                endpointConfiguration1.UseSerialization<SystemJsonSerializer>();
 
                 hostBuilder.UseNServiceBus(endpointConfiguration1);
 
                 var endpointConfiguration2 = new EndpointConfiguration("NSBRepro1");
                 endpointConfiguration2.SendOnly();
                 endpointConfiguration2.UseTransport(new LearningTransport());
+                endpointConfiguration2.UseSerialization<SystemJsonSerializer>();
 
                 hostBuilder.UseNServiceBus(endpointConfiguration2);
 
@@ -41,6 +43,7 @@
                 var endpointConfiguration1 = new EndpointConfiguration("NSBRepro1");
                 endpointConfiguration1.SendOnly();
                 endpointConfiguration1.UseTransport(new LearningTransport());
+                endpointConfiguration1.UseSerialization<SystemJsonSerializer>();
 
                 hostBuilder1.UseNServiceBus(endpointConfiguration1);
 
@@ -51,6 +54,7 @@
                 var endpointConfiguration2 = new EndpointConfiguration("NSBRepro1");
                 endpointConfiguration2.SendOnly();
                 endpointConfiguration2.UseTransport(new LearningTransport());
+                endpointConfiguration2.UseSerialization<SystemJsonSerializer>();
 
                 hostBuilder2.UseNServiceBus(endpointConfiguration2);
 

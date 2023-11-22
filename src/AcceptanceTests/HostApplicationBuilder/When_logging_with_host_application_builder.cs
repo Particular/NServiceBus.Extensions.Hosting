@@ -28,6 +28,7 @@
 
             var endpointConfiguration = new EndpointConfiguration("NSBRepro");
             endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
+            endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
             hostBuilder.UseNServiceBus(endpointConfiguration);
 
