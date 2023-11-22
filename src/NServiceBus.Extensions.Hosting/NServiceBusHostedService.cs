@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Logging;
     using Microsoft.Extensions.Hosting;
+
     using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     class NServiceBusHostedService : IHostedService
