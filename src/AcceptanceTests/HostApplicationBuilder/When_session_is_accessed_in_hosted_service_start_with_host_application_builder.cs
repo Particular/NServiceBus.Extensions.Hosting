@@ -15,13 +15,12 @@
         public async Task Should_be_available_when_configured_after_NServiceBus()
         {
             var hostBuilder = Host.CreateApplicationBuilder();
-            hostBuilder.UseNServiceBus(() =>
-            {
-                var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
-                endpointConfiguration.SendOnly();
-                endpointConfiguration.UseTransport(new LearningTransport());
-                return endpointConfiguration;
-            });
+
+            var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
+            endpointConfiguration.SendOnly();
+            endpointConfiguration.UseTransport(new LearningTransport());
+
+            hostBuilder.UseNServiceBus(endpointConfiguration);
 
             hostBuilder.Services.AddHostedService<HostedServiceThatAccessSessionInStart>();
 
@@ -38,13 +37,11 @@
                 var hostBuilder = Host.CreateApplicationBuilder();
                 hostBuilder.Services.AddHostedService<HostedServiceThatAccessSessionInStart>();
 
-                hostBuilder.UseNServiceBus(() =>
-                {
-                    var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
-                    endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport(new LearningTransport());
-                    return endpointConfiguration;
-                });
+                var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
+                endpointConfiguration.SendOnly();
+                endpointConfiguration.UseTransport(new LearningTransport());
+
+                hostBuilder.UseNServiceBus(endpointConfiguration);
 
                 var host = hostBuilder.Build();
                 await host.StartAsync();

@@ -26,17 +26,14 @@
             hostBuilder.Logging.SetMinimumLevel(LogLevel.Warning);
             hostBuilder.Logging.AddProvider(new StringBuilderProvider(builder));
 
-            hostBuilder.UseNServiceBus(() =>
-            {
-                var logger = LogManager.GetLogger("TestLogger");
-                logger.Warn(ExpectedLogMessage);
-                logger.Debug(NotExpectedLogMessage);
+            var endpointConfiguration = new EndpointConfiguration("NSBRepro");
+            endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
 
-                var endpointConfiguration = new EndpointConfiguration("NSBRepro");
-                endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
+            hostBuilder.UseNServiceBus(endpointConfiguration);
 
-                return endpointConfiguration;
-            });
+            var logger = LogManager.GetLogger("TestLogger");
+            logger.Warn(ExpectedLogMessage);
+            logger.Debug(NotExpectedLogMessage);
 
             var host = hostBuilder.Build();
 
@@ -44,8 +41,9 @@
             {
                 await host.StartAsync();
 
-                StringAssert.Contains(ExpectedLogMessage, builder.ToString());
-                StringAssert.DoesNotContain(NotExpectedLogMessage, builder.ToString());
+                var actual = builder.ToString();
+                StringAssert.Contains(ExpectedLogMessage, actual);
+                StringAssert.DoesNotContain(NotExpectedLogMessage, actual);
             }
             finally
             {
