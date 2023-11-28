@@ -18,13 +18,12 @@
             {
                 var hostBuilder = Host.CreateApplicationBuilder();
 
-                hostBuilder.UseNServiceBus(() =>
-                {
-                    var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
-                    endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport(new LearningTransport());
-                    return endpointConfiguration;
-                });
+                var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
+                endpointConfiguration.SendOnly();
+                endpointConfiguration.UseTransport(new LearningTransport());
+                endpointConfiguration.UseSerialization<SystemJsonSerializer>();
+
+                hostBuilder.UseNServiceBus(endpointConfiguration);
 
                 hostBuilder.Services.AddHostedService<HostedServiceThatAccessSessionInCtor>();
 

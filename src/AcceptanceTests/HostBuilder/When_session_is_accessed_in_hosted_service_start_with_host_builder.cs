@@ -20,6 +20,7 @@
                     var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                     endpointConfiguration.SendOnly();
                     endpointConfiguration.UseTransport(new LearningTransport());
+                    endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                     return endpointConfiguration;
                 })
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInStart>())
@@ -41,6 +42,7 @@
                       var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
                       endpointConfiguration.SendOnly();
                       endpointConfiguration.UseTransport(new LearningTransport());
+                      endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                       return endpointConfiguration;
                   })
                 .Build();

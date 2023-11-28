@@ -36,6 +36,7 @@
 
                     var endpointConfiguration = new EndpointConfiguration("NSBRepro");
                     endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
+                    endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
                     return endpointConfiguration;
                 })
@@ -45,8 +46,9 @@
             {
                 await host.StartAsync();
 
-                StringAssert.Contains(ExpectedLogMessage, builder.ToString());
-                StringAssert.DoesNotContain(NotExpectedLogMessage, builder.ToString());
+                var actual = builder.ToString();
+                StringAssert.Contains(ExpectedLogMessage, actual);
+                StringAssert.DoesNotContain(NotExpectedLogMessage, actual);
             }
             finally
             {

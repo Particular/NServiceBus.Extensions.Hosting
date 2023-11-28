@@ -3,7 +3,7 @@ namespace NServiceBus
 {
     public static class HostApplicationBuilderExtensions
     {
-        public static Microsoft.Extensions.Hosting.IHostApplicationBuilder UseNServiceBus(this Microsoft.Extensions.Hosting.IHostApplicationBuilder builder, System.Func<NServiceBus.EndpointConfiguration> endpointConfigurationBuilder) { }
+        public static Microsoft.Extensions.Hosting.IHostApplicationBuilder UseNServiceBus(this Microsoft.Extensions.Hosting.IHostApplicationBuilder builder, NServiceBus.EndpointConfiguration endpointConfiguration) { }
     }
     public static class HostBuilderExtensions
     {

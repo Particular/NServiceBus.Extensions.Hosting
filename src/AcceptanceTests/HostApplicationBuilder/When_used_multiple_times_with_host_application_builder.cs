@@ -15,21 +15,19 @@
             {
                 var hostBuilder = Host.CreateApplicationBuilder();
 
-                hostBuilder.UseNServiceBus(() =>
-                {
-                    var endpointConfiguration = new EndpointConfiguration("NSBRepro");
-                    endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport(new LearningTransport());
-                    return endpointConfiguration;
-                });
+                var endpointConfiguration1 = new EndpointConfiguration("NSBRepro");
+                endpointConfiguration1.SendOnly();
+                endpointConfiguration1.UseTransport(new LearningTransport());
+                endpointConfiguration1.UseSerialization<SystemJsonSerializer>();
 
-                hostBuilder.UseNServiceBus(() =>
-                {
-                    var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
-                    endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport(new LearningTransport());
-                    return endpointConfiguration;
-                });
+                hostBuilder.UseNServiceBus(endpointConfiguration1);
+
+                var endpointConfiguration2 = new EndpointConfiguration("NSBRepro1");
+                endpointConfiguration2.SendOnly();
+                endpointConfiguration2.UseTransport(new LearningTransport());
+                endpointConfiguration2.UseSerialization<SystemJsonSerializer>();
+
+                hostBuilder.UseNServiceBus(endpointConfiguration2);
 
                 hostBuilder.Build();
             });
@@ -41,24 +39,24 @@
             Assert.DoesNotThrow(() =>
             {
                 var hostBuilder1 = Host.CreateApplicationBuilder();
-                hostBuilder1.UseNServiceBus(() =>
-                {
-                    var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
-                    endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport(new LearningTransport());
-                    return endpointConfiguration;
-                });
+
+                var endpointConfiguration1 = new EndpointConfiguration("NSBRepro1");
+                endpointConfiguration1.SendOnly();
+                endpointConfiguration1.UseTransport(new LearningTransport());
+                endpointConfiguration1.UseSerialization<SystemJsonSerializer>();
+
+                hostBuilder1.UseNServiceBus(endpointConfiguration1);
 
                 hostBuilder1.Build();
 
                 var hostBuilder2 = Host.CreateApplicationBuilder();
-                hostBuilder2.UseNServiceBus(() =>
-                {
-                    var endpointConfiguration = new EndpointConfiguration("NSBRepro1");
-                    endpointConfiguration.SendOnly();
-                    endpointConfiguration.UseTransport(new LearningTransport());
-                    return endpointConfiguration;
-                });
+
+                var endpointConfiguration2 = new EndpointConfiguration("NSBRepro1");
+                endpointConfiguration2.SendOnly();
+                endpointConfiguration2.UseTransport(new LearningTransport());
+                endpointConfiguration2.UseSerialization<SystemJsonSerializer>();
+
+                hostBuilder2.UseNServiceBus(endpointConfiguration2);
 
                 hostBuilder2.Build();
             });
