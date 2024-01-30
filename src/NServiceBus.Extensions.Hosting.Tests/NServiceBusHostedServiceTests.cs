@@ -8,7 +8,7 @@
         [Test]
         public void When_stopping_without_starting_should_not_throw()
         {
-            var hostedService = new NServiceBusHostedService(null, null, null, null, null);
+            var hostedService = new NServiceBusHostedService(new EndpointStarter(null, null, null, null));
 
             Assert.DoesNotThrowAsync(async () => await hostedService.StopAsync());
         }

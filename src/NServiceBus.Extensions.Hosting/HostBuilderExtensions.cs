@@ -34,14 +34,14 @@
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
                 var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, serviceCollection);
 
-                serviceCollection.AddSingleton(_ => new HostAwareMessageSession(startableEndpoint.MessageSession));
-                serviceCollection.AddSingleton<IMessageSession>(serviceProvider => serviceProvider.GetService<HostAwareMessageSession>());
-                serviceCollection.AddSingleton<IHostedService>(serviceProvider => new NServiceBusHostedService(
+                serviceCollection.AddSingleton(serviceProvider => new EndpointStarter(
                     startableEndpoint,
                     serviceProvider,
                     serviceProvider.GetRequiredService<ILoggerFactory>(),
-                    deferredLoggerFactory,
-                    serviceProvider.GetRequiredService<HostAwareMessageSession>()));
+                    deferredLoggerFactory));
+                serviceCollection.AddSingleton(serviceProvider => new HostAwareMessageSession(serviceProvider.GetRequiredService<EndpointStarter>()));
+                serviceCollection.AddSingleton<IMessageSession>(serviceProvider => serviceProvider.GetRequiredService<HostAwareMessageSession>());
+                serviceCollection.AddHostedService(serviceProvider => new NServiceBusHostedService(serviceProvider.GetRequiredService<EndpointStarter>()));
             });
 
             return hostBuilder;
