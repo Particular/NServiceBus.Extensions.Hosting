@@ -1,12 +1,10 @@
 ﻿namespace NServiceBus
 {
     using System;
+    using System.Collections.Generic;
     using Extensions.Hosting;
     using Logging;
-    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-
-    using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     /// <summary>
     /// Extension methods to configure NServiceBus for the .NET generic host.
@@ -21,27 +19,16 @@
             var deferredLoggerFactory = new DeferredLoggerFactory();
             LogManager.UseFactory(deferredLoggerFactory);
 
-            hostBuilder.ConfigureServices((ctx, serviceCollection) =>
+            hostBuilder.ConfigureServices((ctx, services) =>
             {
-                if (ctx.Properties.ContainsKey(HostBuilderExtensionInUse))
+                if (!ctx.Properties.TryAdd(HostBuilderExtensionInUse, null))
                 {
                     throw new InvalidOperationException(
                         "`UseNServiceBus` can only be used once on the same host instance because subsequent calls would override each other. For multi-endpoint hosting scenarios consult our documentation page.");
                 }
 
-                ctx.Properties.Add(HostBuilderExtensionInUse, null);
-
                 var endpointConfiguration = endpointConfigurationBuilder(ctx);
-                var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, serviceCollection);
-
-                serviceCollection.AddSingleton(serviceProvider => new EndpointStarter(
-                    startableEndpoint,
-                    serviceProvider,
-                    serviceProvider.GetRequiredService<ILoggerFactory>(),
-                    deferredLoggerFactory));
-                serviceCollection.AddSingleton(serviceProvider => new HostAwareMessageSession(serviceProvider.GetRequiredService<EndpointStarter>()));
-                serviceCollection.AddSingleton<IMessageSession>(serviceProvider => serviceProvider.GetRequiredService<HostAwareMessageSession>());
-                serviceCollection.AddHostedService(serviceProvider => new NServiceBusHostedService(serviceProvider.GetRequiredService<EndpointStarter>()));
+                services.AddNServiceBus(endpointConfiguration, deferredLoggerFactory);
             });
 
             return hostBuilder;

@@ -5,14 +5,8 @@
     using Logging;
     using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
-    class DeferredLogger :
-        ILog
+    class DeferredLogger(string name) : ILog
     {
-        public DeferredLogger(string name)
-        {
-            this.name = name;
-        }
-
         // capturing everything just in case when the logger is not yet set
         public bool IsDebugEnabled => logger == null || logger.IsDebugEnabled;
         public bool IsInfoEnabled => logger == null || logger.IsInfoEnabled;
@@ -262,11 +256,9 @@
             }
         }
 
-        readonly ConcurrentQueue<(LogLevel level, string message)> deferredMessageLogs = new ConcurrentQueue<(LogLevel level, string message)>();
-        readonly ConcurrentQueue<(LogLevel level, string message, Exception exception)> deferredExceptionLogs = new ConcurrentQueue<(LogLevel level, string message, Exception exception)>();
-        readonly ConcurrentQueue<(LogLevel level, string format, object[] args)> deferredFormatLogs = new ConcurrentQueue<(LogLevel level, string format, object[] args)>();
-
-        string name;
+        readonly ConcurrentQueue<(LogLevel level, string message)> deferredMessageLogs = new();
+        readonly ConcurrentQueue<(LogLevel level, string message, Exception exception)> deferredExceptionLogs = new();
+        readonly ConcurrentQueue<(LogLevel level, string format, object[] args)> deferredFormatLogs = new();
 
         ILog logger;
     }
