@@ -14,7 +14,11 @@
         public async Task Should_be_available_when_configured_after_NServiceBus()
         {
             var hostBuilder = Host.CreateApplicationBuilder();
-
+            hostBuilder.Services.Configure<HostOptions>(options =>
+            {
+                options.ServicesStartConcurrently = true;
+                options.ServicesStopConcurrently = true;
+            });
             var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
             endpointConfiguration.SendOnly();
             endpointConfiguration.UseTransport(new LearningTransport());
@@ -34,6 +38,12 @@
         public async Task Should_be_available_when_configured_before_NServiceBus()
         {
             var hostBuilder = Host.CreateApplicationBuilder();
+            hostBuilder.Services.Configure<HostOptions>(options =>
+            {
+                options.ServicesStartConcurrently = true;
+                options.ServicesStopConcurrently = true;
+            });
+
             hostBuilder.Services.AddHostedService<FirstHostedService>();
             hostBuilder.Services.AddHostedService<SecondHostedService>();
 
