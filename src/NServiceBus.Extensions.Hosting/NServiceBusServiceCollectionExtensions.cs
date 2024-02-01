@@ -1,7 +1,6 @@
 namespace NServiceBus.Extensions.Hosting
 {
     using Microsoft.Extensions.DependencyInjection;
-
     using MicrosoftILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     static class NServiceBusServiceCollectionExtensions
