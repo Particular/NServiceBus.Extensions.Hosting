@@ -2,6 +2,7 @@
 {
     using System;
     using Logging;
+
     using IMsLoggingFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     class LoggerFactory(IMsLoggingFactory loggerFactory) : ILoggerFactory
@@ -10,6 +11,6 @@
 
         public ILog GetLogger(string name) => new Logger(loggerFactory.CreateLogger(name));
 
-        IMsLoggingFactory loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+        readonly IMsLoggingFactory loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
     }
 }

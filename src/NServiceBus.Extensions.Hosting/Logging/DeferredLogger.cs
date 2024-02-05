@@ -3,15 +3,20 @@
     using System;
     using System.Collections.Concurrent;
     using Logging;
+
     using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     class DeferredLogger(string name) : ILog
     {
         // capturing everything just in case when the logger is not yet set
         public bool IsDebugEnabled => logger == null || logger.IsDebugEnabled;
+
         public bool IsInfoEnabled => logger == null || logger.IsInfoEnabled;
+
         public bool IsWarnEnabled => logger == null || logger.IsWarnEnabled;
+
         public bool IsErrorEnabled => logger == null || logger.IsErrorEnabled;
+
         public bool IsFatalEnabled => logger == null || logger.IsFatalEnabled;
 
         public void Debug(string message)

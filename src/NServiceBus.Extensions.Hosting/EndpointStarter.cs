@@ -4,6 +4,7 @@ namespace NServiceBus.Extensions.Hosting
     using System.Threading;
     using System.Threading.Tasks;
     using Logging;
+
     using ILoggerFactory = Microsoft.Extensions.Logging.ILoggerFactory;
 
     class EndpointStarter(
@@ -31,8 +32,7 @@ namespace NServiceBus.Extensions.Hosting
                 LogManager.UseFactory(new LoggerFactory(loggerFactory));
                 deferredLoggerFactory.FlushAll(loggerFactory);
 
-                endpoint = await startableEndpoint.Start(serviceProvider, cancellationToken)
-                    .ConfigureAwait(false);
+                endpoint = await startableEndpoint.Start(serviceProvider, cancellationToken).ConfigureAwait(false);
 
                 return endpoint;
             }

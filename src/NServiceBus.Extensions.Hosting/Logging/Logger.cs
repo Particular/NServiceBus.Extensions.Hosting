@@ -3,6 +3,7 @@
     using System;
     using Logging;
     using Microsoft.Extensions.Logging;
+
     using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
     class Logger(ILogger logger) : ILog
@@ -47,6 +48,6 @@
 
         public void FatalFormat(string format, params object[] args) => logger.LogCritical(format, args);
 
-        ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        readonly ILogger logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 }
