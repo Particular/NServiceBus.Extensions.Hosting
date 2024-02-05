@@ -1,74 +1,45 @@
-﻿namespace NServiceBus
+﻿namespace NServiceBus.Extensions.Hosting
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
 
-    class HostAwareMessageSession : IMessageSession
+    class HostAwareMessageSession(EndpointStarter endpointStarter) : IMessageSession
     {
-        public HostAwareMessageSession(Lazy<IMessageSession> messageSession)
+        public async Task Send(object message, SendOptions options, CancellationToken cancellationToken = default)
         {
-            this.messageSession = messageSession;
+            var messageSession = await endpointStarter.GetOrStart(cancellationToken).ConfigureAwait(false);
+            await messageSession.Send(message, options, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task Send(object message, SendOptions options, CancellationToken cancellationToken = default)
+        public async Task Send<T>(Action<T> messageConstructor, SendOptions options, CancellationToken cancellationToken = default)
         {
-            GuardAgainstTooEarlyUse();
-
-            return messageSession.Value.Send(message, options, cancellationToken);
+            var messageSession = await endpointStarter.GetOrStart(cancellationToken).ConfigureAwait(false);
+            await messageSession.Send(messageConstructor, options, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task Send<T>(Action<T> messageConstructor, SendOptions options, CancellationToken cancellationToken = default)
+        public async Task Publish(object message, PublishOptions options, CancellationToken cancellationToken = default)
         {
-            GuardAgainstTooEarlyUse();
-
-            return messageSession.Value.Send(messageConstructor, options, cancellationToken);
+            var messageSession = await endpointStarter.GetOrStart(cancellationToken).ConfigureAwait(false);
+            await messageSession.Publish(message, options, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task Publish(object message, PublishOptions options, CancellationToken cancellationToken = default)
+        public async Task Publish<T>(Action<T> messageConstructor, PublishOptions options, CancellationToken cancellationToken = default)
         {
-            GuardAgainstTooEarlyUse();
-
-            return messageSession.Value.Publish(message, options, cancellationToken);
+            var messageSession = await endpointStarter.GetOrStart(cancellationToken).ConfigureAwait(false);
+            await messageSession.Publish(messageConstructor, options, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task Publish<T>(Action<T> messageConstructor, PublishOptions options, CancellationToken cancellationToken = default)
+        public async Task Subscribe(Type eventType, SubscribeOptions options, CancellationToken cancellationToken = default)
         {
-            GuardAgainstTooEarlyUse();
-
-            return messageSession.Value.Publish(messageConstructor, options, cancellationToken);
+            var messageSession = await endpointStarter.GetOrStart(cancellationToken).ConfigureAwait(false);
+            await messageSession.Subscribe(eventType, options, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task Subscribe(Type eventType, SubscribeOptions options, CancellationToken cancellationToken = default)
+        public async Task Unsubscribe(Type eventType, UnsubscribeOptions options, CancellationToken cancellationToken = default)
         {
-            GuardAgainstTooEarlyUse();
-
-            return messageSession.Value.Subscribe(eventType, options, cancellationToken);
+            var messageSession = await endpointStarter.GetOrStart(cancellationToken).ConfigureAwait(false);
+            await messageSession.Unsubscribe(eventType, options, cancellationToken).ConfigureAwait(false);
         }
-
-        public Task Unsubscribe(Type eventType, UnsubscribeOptions options, CancellationToken cancellationToken = default)
-        {
-            GuardAgainstTooEarlyUse();
-
-            return messageSession.Value.Unsubscribe(eventType, options, cancellationToken);
-        }
-
-        public void MarkReadyForUse()
-        {
-            isReadyForUse = true;
-        }
-
-        void GuardAgainstTooEarlyUse()
-        {
-            if (isReadyForUse)
-            {
-                return;
-            }
-
-            throw new InvalidOperationException("The message session can't be used before NServiceBus is started. Place `UseNServiceBus()` on the host builder before registering any hosted service (e.g. `services.AddHostedService<HostedServiceAccessingTheSession>()`) or the web host configuration (e.g. `builder.ConfigureWebHostDefaults`) should hosted services or controllers require access to the session.");
-        }
-
-        bool isReadyForUse;
-        Lazy<IMessageSession> messageSession;
     }
 }

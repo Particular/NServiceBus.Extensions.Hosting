@@ -8,12 +8,17 @@
     using NUnit.Framework;
 
     [TestFixture]
-    public class When_session_is_accessed_in_hosted_service_start_with_host_builder
+    public class When_session_is_accessed_in_multiple_hosted_services_started_concurrently_with_host_builder
     {
         [Test]
         public async Task Should_be_available_when_configured_after_NServiceBus()
         {
             var host = Host.CreateDefaultBuilder()
+                .ConfigureHostOptions(options =>
+                {
+                    options.ServicesStartConcurrently = true;
+                    options.ServicesStopConcurrently = true;
+                })
                 .UseNServiceBus(hostBuilderContext =>
                 {
                     var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
@@ -22,7 +27,11 @@
                     endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                     return endpointConfiguration;
                 })
-                .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInStart>())
+                .ConfigureServices((ctx, serviceProvider) =>
+                {
+                    serviceProvider.AddHostedService<FirstHostedService>();
+                    serviceProvider.AddHostedService<SecondHostedService>();
+                })
                 .Build();
 
             await host.StartAsync();
@@ -33,7 +42,16 @@
         public async Task Should_be_available_when_configured_beforeNServiceBus()
         {
             var host = Host.CreateDefaultBuilder()
-                .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInStart>())
+                .ConfigureHostOptions(options =>
+                {
+                    options.ServicesStartConcurrently = true;
+                    options.ServicesStopConcurrently = true;
+                })
+                .ConfigureServices((ctx, serviceProvider) =>
+                {
+                    serviceProvider.AddHostedService<FirstHostedService>();
+                    serviceProvider.AddHostedService<SecondHostedService>();
+                })
                 .UseNServiceBus(hostBuilderContext =>
                 {
                     var endpointConfiguration = new EndpointConfiguration("MyEndpoint");
@@ -47,15 +65,20 @@
             await host.StartAsync();
         }
 
-        class HostedServiceThatAccessSessionInStart(IMessageSession messageSession) : IHostedService
+        class FirstHostedService(IMessageSession messageSession) : IHostedService
         {
             public Task StartAsync(CancellationToken cancellationToken) => messageSession.Publish<MyEvent>(cancellationToken);
 
             public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-            class MyEvent : IEvent
-            {
-            }
         }
+
+        class SecondHostedService(IMessageSession messageSession) : IHostedService
+        {
+            public Task StartAsync(CancellationToken cancellationToken) => messageSession.Publish<MyEvent>(cancellationToken);
+
+            public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        }
+
+        class MyEvent : IEvent;
     }
 }

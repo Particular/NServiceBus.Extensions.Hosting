@@ -4,15 +4,11 @@
     using System.Collections.Concurrent;
     using Logging;
 
-    class DeferredLoggerFactory :
-        ILoggerFactory
+    class DeferredLoggerFactory : ILoggerFactory
     {
         readonly ConcurrentBag<DeferredLogger> acquiredLoggers = [];
 
-        public ILog GetLogger(Type type)
-        {
-            return GetLogger(type.FullName);
-        }
+        public ILog GetLogger(Type type) => GetLogger(type.FullName);
 
         public ILog GetLogger(string name)
         {
