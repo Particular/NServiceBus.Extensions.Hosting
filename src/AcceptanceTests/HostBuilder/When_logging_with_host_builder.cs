@@ -47,8 +47,8 @@
                 await host.StartAsync();
 
                 var actual = builder.ToString();
-                StringAssert.Contains(ExpectedLogMessage, actual);
-                StringAssert.DoesNotContain(NotExpectedLogMessage, actual);
+                Assert.That(actual, Does.Contain(ExpectedLogMessage));
+                Assert.That(actual, Does.Not.Contain(NotExpectedLogMessage));
             }
             finally
             {
