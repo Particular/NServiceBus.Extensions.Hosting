@@ -12,12 +12,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" AutomaticVersionRange="false" />
-    <PackageReference Include="NServiceBus" Version="9.2.3" />
     <PackageReference Include="Particular.Packaging" Version="4.2.2" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="NServiceBus.Extensions.Hosting.Tests" Key="$(NServiceBusTestsKey)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\NServiceBus\src\NServiceBus.Core\NServiceBus.Core.csproj" />
   </ItemGroup>
 
 </Project>
