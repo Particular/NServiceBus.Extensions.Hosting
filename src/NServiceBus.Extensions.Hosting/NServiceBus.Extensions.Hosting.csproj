@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\NServiceBus\src\NServiceBus.Core\NServiceBus.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\..\NServiceBus\src\NServiceBus.Core\NServiceBus.Core.csproj" />
   </ItemGroup>
 
 </Project>
