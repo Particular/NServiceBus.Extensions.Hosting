@@ -10,6 +10,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{57D13E06-1476-499C-8BEF-C0291E1DCA58}"
 	ProjectSection(SolutionItems) = preProject
 		Custom.Build.props = Custom.Build.props
+		..\.github\workflows\ci.yml = ..\.github\workflows\ci.yml
+		..\.github\workflows\release.yml = ..\.github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AcceptanceTests", "AcceptanceTests\AcceptanceTests.csproj", "{DC17DDE2-4E44-48AF-BBD9-7465EDD0C8C7}"
