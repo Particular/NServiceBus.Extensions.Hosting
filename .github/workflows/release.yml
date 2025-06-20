@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4.3.1
         with:
-          dotnet-version: 9.0.x
+          global-json-file: global.json
       - name: Build
         run: dotnet build src --configuration Release
       - name: Sign NuGet packages
@@ -40,4 +40,4 @@ jobs:
         # Does not follow standard practice of targeting explicit versions because configuration is tightly coupled to Octopus Deploy configuration
         uses: Particular/push-octopus-package-action@main
         with:
-          octopus-deploy-api-key: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}	
+          octopus-deploy-api-key: ${{ secrets.OCTOPUS_DEPLOY_API_KEY }}

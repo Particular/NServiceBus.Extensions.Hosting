@@ -19,8 +19,7 @@
         {
             if (!builder.Properties.TryAdd(HostBuilderExtensionInUse, null))
             {
-                throw new InvalidOperationException(
-                    "`UseNServiceBus` can only be used once on the same host instance because subsequent calls would override each other. For multi-endpoint hosting scenarios consult our documentation page.");
+                throw new InvalidOperationException("UseNServiceBus can only be used once on the same host instance because subsequent calls would override each other. For multi-endpoint hosting scenarios consult our documentation page.");
             }
 
             var deferredLoggerFactory = new DeferredLoggerFactory();

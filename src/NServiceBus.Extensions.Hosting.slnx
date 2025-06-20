@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../.github/workflows/ci.yml" />
+    <File Path="../.github/workflows/release.yml" />
+    <File Path="Custom.Build.props" />
+  </Folder>
+  <Project Path="AcceptanceTests/AcceptanceTests.csproj" />
+  <Project Path="NServiceBus.Extensions.Hosting.Tests/NServiceBus.Extensions.Hosting.Tests.csproj" />
+  <Project Path="NServiceBus.Extensions.Hosting/NServiceBus.Extensions.Hosting.csproj" />
+</Solution>
