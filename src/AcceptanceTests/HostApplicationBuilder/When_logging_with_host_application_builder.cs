@@ -18,8 +18,8 @@
         {
             var builder = new StringBuilder();
 
-            var ExpectedLogMessage = "We want to see this";
-            var NotExpectedLogMessage = "We don't want to see this";
+            var expectedLogMessage = "We want to see this";
+            var notExpectedLogMessage = "We don't want to see this";
 
             var hostBuilder = Host.CreateApplicationBuilder();
             hostBuilder.Logging.ClearProviders();
@@ -33,8 +33,8 @@
             hostBuilder.UseNServiceBus(endpointConfiguration);
 
             var logger = LogManager.GetLogger("TestLogger");
-            logger.Warn(ExpectedLogMessage);
-            logger.Debug(NotExpectedLogMessage);
+            logger.Warn(expectedLogMessage);
+            logger.Debug(notExpectedLogMessage);
 
             var host = hostBuilder.Build();
 
@@ -43,8 +43,8 @@
                 await host.StartAsync();
 
                 var actual = builder.ToString();
-                Assert.That(actual, Does.Contain(ExpectedLogMessage));
-                Assert.That(actual, Does.Not.Contain(NotExpectedLogMessage));
+                Assert.That(actual, Does.Contain(expectedLogMessage));
+                Assert.That(actual, Does.Not.Contain(notExpectedLogMessage));
             }
             finally
             {
