@@ -18,8 +18,8 @@
         {
             var builder = new StringBuilder();
 
-            var ExpectedLogMessage = "We want to see this";
-            var NotExpectedLogMessage = "We don't want to see this";
+            var expectedLogMessage = "We want to see this";
+            var notExpectedLogMessage = "We don't want to see this";
 
             var host = Host.CreateDefaultBuilder()
                 .ConfigureLogging(logging =>
@@ -31,8 +31,8 @@
                 .UseNServiceBus(hostBuilderContext =>
                 {
                     var logger = LogManager.GetLogger("TestLogger");
-                    logger.Warn(ExpectedLogMessage);
-                    logger.Debug(NotExpectedLogMessage);
+                    logger.Warn(expectedLogMessage);
+                    logger.Debug(notExpectedLogMessage);
 
                     var endpointConfiguration = new EndpointConfiguration("NSBRepro");
                     endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
@@ -45,8 +45,8 @@
             {
                 await host.StartAsync();
 
-                StringAssert.Contains(ExpectedLogMessage, builder.ToString());
-                StringAssert.DoesNotContain(NotExpectedLogMessage, builder.ToString());
+                StringAssert.Contains(expectedLogMessage, builder.ToString());
+                StringAssert.DoesNotContain(notExpectedLogMessage, builder.ToString());
             }
             finally
             {
