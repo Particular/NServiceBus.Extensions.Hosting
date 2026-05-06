@@ -20,14 +20,18 @@
                 endpointConfiguration1.UseTransport(new LearningTransport());
                 endpointConfiguration1.UseSerialization<SystemJsonSerializer>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 hostBuilder.UseNServiceBus(endpointConfiguration1);
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 var endpointConfiguration2 = new EndpointConfiguration("NSBRepro1");
                 endpointConfiguration2.SendOnly();
                 endpointConfiguration2.UseTransport(new LearningTransport());
                 endpointConfiguration2.UseSerialization<SystemJsonSerializer>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 hostBuilder.UseNServiceBus(endpointConfiguration2);
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 hostBuilder.Build();
             });
@@ -45,7 +49,9 @@
                 endpointConfiguration1.UseTransport(new LearningTransport());
                 endpointConfiguration1.UseSerialization<SystemJsonSerializer>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 hostBuilder1.UseNServiceBus(endpointConfiguration1);
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 hostBuilder1.Build();
 
@@ -56,7 +62,9 @@
                 endpointConfiguration2.UseTransport(new LearningTransport());
                 endpointConfiguration2.UseSerialization<SystemJsonSerializer>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 hostBuilder2.UseNServiceBus(endpointConfiguration2);
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 hostBuilder2.Build();
             });

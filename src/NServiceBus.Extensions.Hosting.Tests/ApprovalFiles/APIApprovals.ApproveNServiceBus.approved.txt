@@ -3,10 +3,12 @@ namespace NServiceBus
 {
     public static class HostApplicationBuilderExtensions
     {
+        [System.Obsolete(@"NServiceBus provides built-in support for hosting endpoints within .NET hosted applications, so this extension method is no longer necessary. Use 'IServiceCollection.AddNServiceBusEndpoint' instead. Will be treated as an error from version 5.0.0. Will be removed in version 6.0.0.", false)]
         public static Microsoft.Extensions.Hosting.IHostApplicationBuilder UseNServiceBus(this Microsoft.Extensions.Hosting.IHostApplicationBuilder builder, NServiceBus.EndpointConfiguration endpointConfiguration) { }
     }
     public static class HostBuilderExtensions
     {
+        [System.Obsolete(@"NServiceBus provides built-in support for hosting endpoints within .NET hosted applications, so this extension method is no longer necessary. Use 'IServiceCollection.AddNServiceBusEndpoint' instead. Will be treated as an error from version 5.0.0. Will be removed in version 6.0.0.", false)]
         public static Microsoft.Extensions.Hosting.IHostBuilder UseNServiceBus(this Microsoft.Extensions.Hosting.IHostBuilder hostBuilder, System.Func<Microsoft.Extensions.Hosting.HostBuilderContext, NServiceBus.EndpointConfiguration> endpointConfigurationBuilder) { }
     }
 }

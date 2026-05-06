@@ -13,6 +13,7 @@
         [Test]
         public async Task Should_be_available()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var host = Host.CreateDefaultBuilder()
                 .UseNServiceBus(hostBuilderContext =>
                 {
@@ -22,6 +23,7 @@
                     endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                     return endpointConfiguration;
                 })
+#pragma warning restore CS0618 // Type or member is obsolete
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInCtor>()).Build();
 
             await host.StartAsync();

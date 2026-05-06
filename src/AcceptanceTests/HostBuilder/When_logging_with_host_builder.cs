@@ -21,6 +21,7 @@
             var expectedLogMessage = "We want to see this";
             var notExpectedLogMessage = "We don't want to see this";
 
+#pragma warning disable CS0618 // Type or member is obsolete
             var host = Host.CreateDefaultBuilder()
                 .ConfigureLogging(logging =>
                 {
@@ -40,6 +41,7 @@
 
                     return endpointConfiguration;
                 })
+#pragma warning restore CS0618 // Type or member is obsolete
                 .Build();
 
             try

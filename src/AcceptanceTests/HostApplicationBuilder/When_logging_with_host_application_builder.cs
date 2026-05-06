@@ -30,7 +30,9 @@
             endpointConfiguration.UseTransport(new LearningTransport { StorageDirectory = TestContext.CurrentContext.TestDirectory });
             endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
             hostBuilder.UseNServiceBus(endpointConfiguration);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             var logger = LogManager.GetLogger("TestLogger");
             logger.Warn(expectedLogMessage);

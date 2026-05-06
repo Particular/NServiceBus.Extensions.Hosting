@@ -13,6 +13,7 @@
         {
             Assert.Throws<InvalidOperationException>(() =>
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 Host.CreateDefaultBuilder()
                     .UseNServiceBus(hostBuilderContext =>
                     {
@@ -30,6 +31,7 @@
                         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                         return endpointConfiguration;
                     })
+#pragma warning restore CS0618 // Type or member is obsolete
                     .Build();
             });
         }
@@ -39,6 +41,7 @@
         {
             Assert.DoesNotThrow(() =>
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 Host.CreateDefaultBuilder()
                     .UseNServiceBus(hostBuilderContext =>
                     {
@@ -48,8 +51,10 @@
                         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                         return endpointConfiguration;
                     })
+#pragma warning restore CS0618 // Type or member is obsolete
                     .Build();
 
+#pragma warning disable CS0618 // Type or member is obsolete
                 Host.CreateDefaultBuilder()
                     .UseNServiceBus(hostBuilderContext =>
                     {
@@ -59,6 +64,7 @@
                         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                         return endpointConfiguration;
                     })
+#pragma warning restore CS0618 // Type or member is obsolete
                     .Build();
             });
         }
