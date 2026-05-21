@@ -8,7 +8,9 @@ namespace NServiceBus.Extensions.Hosting
     {
         public static void AddNServiceBus(this IServiceCollection services, EndpointConfiguration endpointConfiguration, DeferredLoggerFactory loggerFactory)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var startableEndpoint = EndpointWithExternallyManagedContainer.Create(endpointConfiguration, services);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             services.AddSingleton(serviceProvider => new EndpointStarter(
                 startableEndpoint,

@@ -13,6 +13,7 @@
         [Test]
         public async Task Should_be_available_when_configured_after_NServiceBus()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var host = Host.CreateDefaultBuilder()
                 .UseNServiceBus(hostBuilderContext =>
                 {
@@ -22,6 +23,7 @@
                     endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                     return endpointConfiguration;
                 })
+#pragma warning restore CS0618 // Type or member is obsolete
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInStart>())
                 .Build();
 
@@ -32,6 +34,7 @@
         [Test]
         public async Task Should_be_available_when_configured_beforeNServiceBus()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var host = Host.CreateDefaultBuilder()
                 .ConfigureServices((ctx, serviceProvider) => serviceProvider.AddHostedService<HostedServiceThatAccessSessionInStart>())
                 .UseNServiceBus(hostBuilderContext =>
@@ -42,6 +45,7 @@
                     endpointConfiguration.UseSerialization<SystemJsonSerializer>();
                     return endpointConfiguration;
                 })
+#pragma warning restore CS0618 // Type or member is obsolete
                 .Build();
 
             await host.StartAsync();

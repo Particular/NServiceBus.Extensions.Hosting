@@ -20,7 +20,9 @@
             endpointConfiguration.UseTransport(new LearningTransport());
             endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
             hostBuilder.UseNServiceBus(endpointConfiguration);
+#pragma warning restore CS0618 // Type or member is obsolete
 
             hostBuilder.Services.AddHostedService<HostedServiceThatAccessSessionInCtor>();
 

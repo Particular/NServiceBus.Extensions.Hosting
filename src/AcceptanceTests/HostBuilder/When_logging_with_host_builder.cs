@@ -1,7 +1,7 @@
-﻿namespace AcceptanceTests
+﻿#nullable enable
+namespace AcceptanceTests
 {
-    using System;
-    using System.Text;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -16,17 +16,18 @@
         [Test]
         public async Task Should_integrate_with_default_host_logging()
         {
-            var builder = new StringBuilder();
+            var collectingLoggerProvider = new CollectingLoggerProvider();
 
             var expectedLogMessage = "We want to see this";
             var notExpectedLogMessage = "We don't want to see this";
 
+#pragma warning disable CS0618 // Type or member is obsolete
             var host = Host.CreateDefaultBuilder()
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(LogLevel.Warning);
-                    logging.AddProvider(new StringBuilderProvider(builder));
+                    logging.AddProvider(collectingLoggerProvider);
                 })
                 .UseNServiceBus(hostBuilderContext =>
                 {
@@ -40,55 +41,19 @@
 
                     return endpointConfiguration;
                 })
+#pragma warning restore CS0618 // Type or member is obsolete
                 .Build();
 
             try
             {
                 await host.StartAsync();
-
-                var actual = builder.ToString();
-                Assert.That(actual, Does.Contain(expectedLogMessage));
-                Assert.That(actual, Does.Not.Contain(notExpectedLogMessage));
+                Assert.That(collectingLoggerProvider.LogEntries, Is.SupersetOf([("TestLogger", LogLevel.Warning, expectedLogMessage)]));
+                Assert.That(collectingLoggerProvider.LogEntries, Is.Not.SupersetOf(new List<(string, LogLevel, string)> { ("TestLogger", LogLevel.Debug, notExpectedLogMessage) }));
             }
             finally
             {
                 await host.StopAsync();
             }
-        }
-
-        class StringBuilderProvider : ILoggerProvider, ILogger
-        {
-            public StringBuilderProvider(StringBuilder builder)
-            {
-                this.builder = builder;
-            }
-
-            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-            {
-                var message = formatter(state, exception);
-                builder.AppendLine($"[{logLevel}] {message}");
-            }
-
-            public bool IsEnabled(LogLevel logLevel)
-            {
-                return true;
-            }
-
-            public IDisposable BeginScope<TState>(TState state)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Dispose()
-            {
-            }
-
-            public ILogger CreateLogger(string categoryName)
-            {
-                return this;
-            }
-
-            readonly StringBuilder builder;
         }
     }
 }
